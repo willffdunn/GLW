@@ -1,0 +1,153 @@
+﻿@using Models;
+@model GPScoreVM
+<partial name="pvNotification" />
+
+<div class-"container" style="margin-top: -50px">
+    <form method="post">
+    <div class="row pt-2 pb-1" >
+        <div class="col=6" style="text-align:center"> 
+            <h3>@Model.GC.GCName</h3>
+            <h3>@ViewBag.GRDate @ViewBag.GGTtime</h3>
+            <h3> @Model.GP.Member.FirstName   @Model.GP.Member.LastName </h3>
+                @{
+
+                    var i = (int)ViewBag.HoleNbr;
+                 }
+
+        </div>
+    </div>
+    <style>
+        input {
+            border-style: none;
+            width: 30px;
+            text-align: center;
+        }
+        select {
+            border-style: none;
+            width: 30px;
+            text-align: center;
+            font-size:small;
+        }
+        table, th, td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        td {
+            height: 40px;
+        }
+
+        tr:nth-child(0) {
+            background-color: white;
+            color: black;
+        }
+
+        tr:nth-child(1) {
+            background-color: white;
+            color: black;
+        }
+
+        tr:nth-child(2) {
+            background-color: white;
+            color: black;
+        }
+
+        tr:nth-child(3) {
+            background-color: @Model.GC.GCT3;
+            color: @Model.GC.GCC3;
+        }
+
+        tr:nth-child(4) {
+            background-color: @Model.GC.GCT4;
+            color: @Model.GC.GCC4;
+        }
+
+        tr:nth-child(11) {
+            background-color: @Model.GC.GCT5;
+            color: @Model.GC.GCC5;
+        }
+
+        th {
+            background-color: green;
+            color: white;
+        }
+
+        .T1 {
+            background-color: white;
+            color: black;
+        }
+
+        .T2 {
+            background-color: wheat;
+            color: black;
+        }
+    </style>
+                <input type="hidden" asp-for=@Model.GC/>
+                <input type="hidden" asp-for=@Model.GG />
+                <input type="hidden" asp-for=@Model.GP />
+    <table border="0" >
+        <thead>
+            <tr>
+                <td>
+                    <table border="0">
+                        <thead>
+                            <tr>
+                                <th width="270px">
+                                    
+                                </th>
+                                <th>      </th>
+                                <th>      </th>
+                                <th>      </th>
+                                <th>      </th>
+
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>         
+                                <td maxlength="5">
+                                        <asp:Button ID="btnMinus" runat="server" OnClick="OnMinus"
+                                                    Style="font-weight: 700; font-size: x-large" Text="-" />
+                                        <asp:TextBox ID="txtNumber" runat="server" Width="49px"></asp:TextBox>
+                                        <asp:Button ID="btnPlus" runat="server" OnClick="OnPlus"
+                                                    Style="font-size: x-large" Text="+" />
+                                    </td>
+
+                                <td>
+                                  <input type="text" asp-for=@Model.GPS[i].GolfCourseHole.GHHole id="valueField"
+                                               value=@Model.GPS[i].GolfCourseHole.GHHole />
+                                </td>
+                                <td>
+                                  <button id="plusBtn">+</button> <button id="minusBtn">-</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+        </thead>
+    </table>
+    <br/> 
+       <div class="row">
+            <div class="col-6">
+
+             <button type="submit" class="btn btn-primary form-control">Save Changes</button>
+ 
+            </div>
+            <div class="col-6">
+                <a asp asp-controller="GolfPlayer" asp-action="Index" asp-route-GGId=@ViewBag.GGId class="btn btn-secondary form-control">
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts {
+
+    <script src="~/js/Custom.js"> </script>
+}
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}
+

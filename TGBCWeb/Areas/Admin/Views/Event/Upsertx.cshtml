@@ -1,0 +1,79 @@
+﻿@model Event
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<partial name="pvNotification" />
+
+<div style="margin-top: -65px">
+    <form method="post">
+        <div class="pt-4 mt-3" style="text-align: center">
+
+            <div asp-validation-summary="All">
+                <div class="row pb-2" style="margin-left: -70px">
+                    <h3 class="text-primary" style="text-align:center"> Golf Club Event</h3>
+                    <hr />
+                    <ul style="list-style-type:none;">
+                        <li>
+                            <input disabled asp-for="EvShortDescription" placeholder="Event Short Description" style="width:400px; text-align:center" />
+                            <span asp-validation-for="EvShortDescription" class="text-danger"></span>
+                        </li>
+                        <br />
+                        <li>
+                            <Label>  Event Type</Label>
+                            <select disabled asp-for="EvType" class="form-divided">
+                                <option value="Golf Round">Golf Round</option>
+                                <option value="Golf Dinner">Golf Dinner</option>
+                            </select>
+
+                            <input disabled type="Date" asp-for="EvDate" class="field-divided" placeholder="Event Date" size="50" />
+                            <span asp-validation-for="EvDate" class="text-danger"></span>
+                        </li>
+                        <br />
+
+                        <li>
+                            <textarea readonly id="summernote" name="EvDescription" style="text-align:center"
+                                      asp-for="EvDescription" placeholder="Event Description"></textarea>
+                            <span asp-validation-for="EvDescription" class="text-danger"></span>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" >
+                <a asp asp-controller="Event" asp-action="Index" class="btn btn-primary form-control" style="text-align:center">
+                    Back to List
+                </a>
+            </div>
+        </div>
+        <script>
+            $('#summernote').summernote({
+                toolbar: false
+             });
+        </script>
+ 
+
+    </form>
+</div>
+@section Scripts {
+
+
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+

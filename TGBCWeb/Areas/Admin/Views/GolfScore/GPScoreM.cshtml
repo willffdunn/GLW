@@ -1,0 +1,161 @@
+﻿@using Models
+@model GolfPlayerScore
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<partial name="pvNotification" />
+ <div class="container"  style="margin-top:-50px">
+    <form method="post" class="row gy-2 gx-3 align-items-center">
+        <div class="row pt-2 pb-1">
+            <div class="col=6" style="text-align:center">
+                <h5 class="text-primary">@ViewBag.GGName: @ViewBag.GRDate -  @ViewBag.GGTtime</h5>
+                <h5 class="text-primary">@ViewBag.GCName</h5>
+                <h5 class="text-primary">@ViewBag.PlayerName</h5>
+                <style>
+                    input {
+                        border-style: none;
+                        width: 30px;
+                        text-align: center;
+                    }
+                    select {
+                        border-style: solid;
+                        width: 150px;
+                        text-align: left;
+                        font-size:x-large;
+                        color: rgb(47,164,231);
+                    }
+                    select option {
+                        border-style:solid;
+                        width: 150px;
+                        text-align: left;
+                        font-size: x-large;
+                        color: rgb(47,164,231);
+                    }
+
+                    table, th, td {
+                        border: 0px;
+                        text-align: left;
+                    }
+
+                    td {
+                        height: 40px; width:200px;
+                        font-weight: bold;
+                        color: rgb(47,164,231);
+                    }
+
+                    tr {
+                        background-color: white;
+                        color: rgb(47,164,231);
+                        font-size: 1.15em;
+                        font-weight: bold;
+                        margin-left: 50px;
+                        font-family:sans-serif;
+                    }
+                 </style>
+          <div class="container d-flex justify-content-center" >
+            <table >
+              <tbody >
+                <tr >
+                    <td >
+                        Hole 
+                    </td>
+                        <td  >
+                        <input disabled asp-for="@Model.GHId" value="@Model.GHId" style="height: 60px; width:150px; font-size:x-large;
+                            font-weight: bold; text-align:left; color: black; background-color:white" />
+                        <input type="hidden" asp-for=@Model.GHId />
+                        <input type="hidden" asp-for=@Model.GPSId />
+                        <input type="hidden" asp-for=@Model.GPId />
+                    </td>
+                    </tr>
+                    <tr > 
+                        <td >
+                            Strokes 
+                        </td>
+                        <td>
+                           <select asp-for=@Model.GPSStrokes value="@Model.GPSStrokes" class="select">
+                                <option value=" "></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <br/>
+                    <tr>
+                        <td >
+                            Putts
+                        </td> 
+                            <td>
+                              <select asp-for=@Model.GPSPutts value="@Model.GPSPutts">
+                                <option value=" "></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <br/>
+                    <tr>
+                        <td >
+                                GIR
+                        </td>
+                        <td>
+                            <select asp-for="@Model.GPSGIY" value="@Model.GPSGIY" v>
+                                <option value=" "></option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <br/>
+                    <tr >
+                        <td >
+                            Drive
+                        </td>
+                        <td>
+                            <select asp-for=@Model.GPSFW value="@Model.GPSFW">
+                                <option value=" "></option>
+                                <option value="Fairway Center">Fairway Center</option>
+                                <option value="Fairway Left">Fairway Left</option>
+                                <option value="Fairway Right">Fairway Right</option>
+                                <option value="Rough Left">Rough Left</option>
+                                <option value="Rough Left">Rough Right</option>
+                                <option value="Out of Bounds">Out of Bounds</option>
+                            </select>
+                        </td>
+                    </tr>
+                 </tbody>
+              </table>
+            </div>
+            <br />
+            <div class="row" >
+                <div class="col-6">
+                    <button type="submit" asp-controller="GolfScore" asp-action="GPScoreM" 
+                    class="btn btn-primary btn-sm form-control" >Score</button>
+                </div>
+                <div class="col-6">
+                    <a asp-controller="GolfScore" asp-action="GPScoreP" asp-route-GPSId=@Model.GPSId asp-route-GPId=@Model.GPId
+                    class="btn btn-secondary btn-sm form-control">Previous</a>
+                </div>
+            </div>
+          </div>
+        </div>
+     </form>
+ </div>
+@section Scripts {
+
+
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

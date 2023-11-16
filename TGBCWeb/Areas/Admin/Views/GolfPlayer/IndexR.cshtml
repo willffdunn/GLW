@@ -1,0 +1,113 @@
+﻿@using Models;
+@model List<GolfPlayer>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<partial name="pvNotification" />
+
+<div class-"container" style="width:100%">
+    <div class="row pt-2 pb-1">
+        <div class="col=4" style="margin-top: -50px">
+            <div class="row pb-2" style="text-align:center">
+                <h3 class="text-primary" style="text-align:center">@ViewBag.GCName</h3>
+                <h3 class="text-primary" style="text-align:center">@ViewBag.GRDate</h3>
+            </div>
+            <div class="row pb-2">
+                <h4 style="text-align: center" class="text-primary">@ViewBag.GGName </h4>
+            </div>
+            <div class="col=6">
+                <a asp asp-controller="GolfPlayer" asp-action="Index2" asp-route-GRId=@ViewBag.GRId class="btn btn-primary">
+                    Add Players
+                    <i class="bi bi-plus-circle"></i>
+                </a>
+            </div>
+        </div>
+
+        <div style="text-align:center">
+            <table class="table table-bordered table-striped ">
+                <thead>
+                    <tr>
+                        <th>
+                            Score
+                        </th>
+                        <th>
+                            Edit
+                        </th>
+                        <th>
+                            Golf Player
+                        <th>
+                            Player Type
+                        </th>
+                        <th>
+                            Group
+                        <th>
+                            Tee Time
+                        </th>
+                        <th>
+                            Delete
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        @foreach (var obj in Model)
+                        {
+                            <tr>
+                                <th>
+                                    <div class="w-50 bntn-group" role="group">
+                                        <a asp-controller="GolfScore" asp-action="GPScore" asp-route-GPId=@obj.GPId
+                                           class="btn btn-primary">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="w-50 bntn-group" role="group">
+                                        <a asp-controller="GolfPlayer" asp-action="Upsert" asp-route-GPId=@obj.GPId asp-route-GRId=@ViewBag.GRId
+                                           class="btn btn-primary">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    </div>
+                                </th>
+                                <th>
+                                    <a href="Member/Edit?MemberId=@obj.MemberId">
+                                        @obj.GPFName @obj.GPLName
+                                    </a>
+
+                                </th>
+                                <th>
+                                    @obj.GPType
+                                </th>
+                                <th>
+                                    @obj.GolfGroup.GGName
+
+                                </th>
+                                <th>
+                                    @obj.GolfGroup.GGTtime
+
+                                </th>
+
+                                <th>
+                                    <div class="w-50 bntn-group" role="group">
+                                        <a asp-controller="GolfPlayer" asp-action="Delete" asp-route-GPId="@obj.GPId" class="btn btn-danger">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

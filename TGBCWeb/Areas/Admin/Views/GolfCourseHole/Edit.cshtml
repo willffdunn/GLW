@@ -1,0 +1,111 @@
+﻿@model GolfCourseHole
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<partial name="pvNotification" />
+<div style="margin-top: -50px">
+  <form method="post" >
+     <div class="pt-4 mt-3" style="text-align:center">
+        <div asp-validation-summary="All">
+            <div class="row pb-2" >
+                <h3 class="text-primary" style="text-align:center"> Edit Golf Course Holes</h3>
+                <h3 style="text-align:center"><label for="GolfCourseHole.GCName"> @Model.GCName </label></h3>
+                <table class="table">
+                    <thead style="background-color:lightblue">
+                        <tr >
+                            <th>
+                                Section Name
+                            </th>
+                            <th>
+                                Hole Number
+                            </th>
+                            <th>
+                                Par
+                            </th>
+                            <th>
+                                Handicap
+                            </th>
+                            <th>
+                                Tee 1
+                            </th>
+                            <th>
+                                Tee 2
+                            </th>
+                            <th>
+                                Tee 3
+                            </th>
+                            <th>
+                                Tee 4
+                            </th>
+                            <th>
+                                Tee 5
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                              
+                                <input type="hidden" name="GCName" value="@Model.GCName" />
+                                <input type="hidden" name="GCId" value="@Model.GCId" />
+                                <input type="hidden" name="GHSectName" value="@Model.GHSectName" />
+                                <input type="hidden" name="GHHole" value="@Model.GHHole" />
+                                <th>
+                                    <input type="text" name="GHSectName" disabled value="@Model.GHSectName" maxlength="15" style="width: 150px" />
+                                    <span asp-validation-for="GHSectName" class="text-danger"></span>
+                                </th>   
+                                <th>
+                                    <input type="text" name="GHHole"  disabled value="@Model.GHHole" maxlength="8" style="width: 80px" />
+                                    <span asp-validation-for="GHHole" class="text-danger"></span>
+                                </th>
+                                <th>
+                                    <input type="number" name="GHPar" value="@Model.GHPar" maxlength="8" style="width: 80px" />
+                                    <span asp-validation-for="GHPar" class="text-danger"></span>
+                                </th>
+                                <th>
+                                    <input type="number" name="GHHandicap" value="@Model.GHHandicap" maxlength="8" style="width: 80px" />
+                                    <span asp-validation-for="GHHandicap" class="text-danger"></span>
+                                    </th>
+                                <th>
+                                    <input type="number" name="GHT1" value="@Model.GHT1" maxlength="8" style="width: 80px" />
+                                    <span asp-validation-for="GHT1" class="text-danger"></span>
+                                </th>
+                                <th>
+                                    <input type="number" name="GHT2" value="@Model.GHT2" maxlength="8" style="width: 80px" />
+                                    <span asp-validation-for="GHT2" class="text-danger"></span>
+                                </th>
+                                <th>
+                                    <input type="number" name="GHT3" value="@Model.GHT3" maxlength="8" style="width: 80px" />
+                                    <span asp-validation-for="GHT3" class="text-danger"></span>
+                                </th>
+                                <th>
+                                    <input type="number" name="GHT4" value="@Model.GHT4" maxlength="8" style="width: 80px" />
+                                    <span asp-validation-for="GHT4" class="text-danger"></span>
+                                </th>
+                                <th>
+                                    <input type="number" name="GHT5" value="@Model.GHT5" maxlength="8" style="width: 80px" />
+                                    <span asp-validation-for="GHT5" class="text-danger"></span>
+                                </th>
+                            </tr>
+                    </tbody>
+                </table>    
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <button type="submit" class="btn btn-primary form-control">Save & Get Next</button>
+        </div>
+
+        <div class="col-6">
+            <a asp asp-controller="GolfCourseHole" asp-action="Index" asp-route-GCId="@Model.GCId" class="btn btn-primary form-control">
+                Back to List
+            </a>
+        </div>
+    </div>
+  </form>
+</div>
+@section Scripts {
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

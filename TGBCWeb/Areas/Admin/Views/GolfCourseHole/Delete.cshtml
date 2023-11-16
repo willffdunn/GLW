@@ -1,0 +1,63 @@
+﻿@model GolfCourseHole
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<partial name="pvNotification" />
+
+<form method="post">
+    <div class="pt-4 mt-3">
+        <div asp-validation-summary="All">
+            <div class="row pb-2">
+                <h3 class="text-primary"> Edit Golf Course Holes</h3>
+                <hr />
+                <ul style="list-style-type:none;">
+                    <li>
+                        <input type="hidden" id="GHId" name="GHId" asp-for="GHId" />
+                        <input asp-for="GCId" type="hidden" class="field-divided" placeholder="ID" />
+                        <span asp-validation-for="GCId" class="text-danger"></span>
+
+                        <label>Section/Course</label>
+                        <input asp-for="GHSectName" disabled class="field-divided" placeholder="Section" />
+                        <span asp-validation-for="GHSectName" class="text-danger"></span>
+                    </li>
+                    <br />
+                    <li>
+                        <label>Course Hole/Course</label>
+                        <input asp-for="GHHole" disabled class="field-divided" placeholder="Hole Number" />
+                        <span asp-validation-for="GHHole" class="text-danger"></span>
+                    </li>
+                    <br />
+                    <li>
+                        <label>Par</label>
+                        <input asp-for="GHPar" disabled class="field-divided" placeholder="Par" />
+                        <span asp-validation-for="GHPar" class="text-danger"></span>
+                    </li>
+                    <br />
+                    <li>
+                        <label>Handicap/Course</label>
+                        <input asp-for="GHHandicap" disabled class="field-divided" placeholder="Handicap" />
+                        <span asp-validation-for="GHHandicap" class="text-danger"></span>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <button type="submit" class="btn btn-primary form-control">Delete</button>
+        </div>
+        <div class="col-6">
+            <a asp asp-controller="GolfCourseHole" asp-action="Index" asp-route-GCId="@Model.GCId" class="btn btn-secondary form-control">
+                Back to List
+            </a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

@@ -1,0 +1,101 @@
+﻿@model List<Event>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<partial name="pvNotification" />
+
+<div class-"container" style="width:100%">
+    <div class="row pt-2 pb-1" style="margin-top:-50px ">
+        <div class="col=4">
+            <h3 class=" text-primary" style="text-align:center">Event List</h3>
+        </div>
+        <br />
+        <div class="col=6">
+            <a asp asp-controller="Event" asp-action="Upsert" class="btn btn-primary">
+                Add an Event
+                <i class="bi bi-plus-circle"></i>
+            </a>
+        </div>
+    </div>
+    
+    <div >
+        <table class="table table-bordered table-striped ">
+            <thead >
+
+                <tr>
+                    <th>
+                        Edit 
+                    </th>
+                    <th>
+                        Event Description
+                    </th>
+
+                    <th>
+                        Event Date
+                    </th>
+                    <th>
+                        Event Type
+                    </th>
+                    <th>
+                        Delete
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var obj in Model)
+                {
+                    <tr>
+
+                        <th>
+                            <div class="w-50 bntn-group" role="group">
+                                <a asp-controller="Event" asp-action="Upsert" asp-route-EvId="@obj.EvId" class="btn btn-primary">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </div>
+                        </th>
+                        <th>
+                            <a href="Event/Browse?EvId=@obj.EvId"> @obj.EvShortDescription </a>
+                        </th>
+                        <th>
+                                @obj.EvDate.ToString("MM/dd/yyyy")
+                        </th>
+                        <th>
+                                @obj.EvType
+                        </th>
+                        <th>
+                            <div class="w-50 bntn-group" role="group">
+                                <a asp-controller="Event" asp-action="Delete" asp-route-EvId="@obj.EvId" class="btn btn-danger">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </div>
+                        </th>
+                    </tr>
+
+                }
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}
+
+
+
+
+
+
+
+
+

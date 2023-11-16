@@ -1,0 +1,53 @@
+﻿@model GolfGroup
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<partial name="pvNotification" />
+
+<div style="margin-top: -60px">
+    <form method="post">
+        <div class="pt-4 mt-3" >
+            <div asp-validation-summary="All">
+                <div class="row pb-2" style="margin-left: -60px">
+                    <h3 style="text-align:center">@ViewBag.GCName</h3>
+                    <h3 style="text-align:center">@(Model.GGId == 0 ? "Add a Golf Group" : "Update") @Model.GGName -  @ViewBag.GRDate</h3>
+                    <ul style="list-style-type:none;">
+                        <br/>
+                        <li style="text-align:center">
+                            <input type="hidden" asp-for="GRId" />
+                            
+                            <input asp-for="GGName" class="field-divided" placeholder="Group Name" size="50" />
+                            <span asp-validation-for="GGName" class="text-danger"></span>
+
+                            <label>Tee time</label>
+                            <input type="time" asp-for="GGTtime" class="field-divided" size="50" />
+                            <span asp-validation-for="GGTtime" class="text-danger"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                @if (Model.GGId != 0)
+                {
+                    <button type="submit" class="btn btn-primary form-control">Update Changes</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary form-control">Add Group</button>
+                }
+            </div>
+            <div class="col-6">
+                <a asp asp-controller="GolfGroup" asp-action="Index" asp-route-GRId=@Model.GRId class ="btn btn-secondary form-control">
+                    Back to List
+                </a>
+            </div>
+        </div>
+        
+    </form>
+</div>
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

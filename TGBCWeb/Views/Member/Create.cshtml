@@ -1,0 +1,93 @@
+﻿@model Member
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<form method="post">
+    <div class="pt-4 mt-3">
+        <div asp-validation-summary="All">
+            <div class="row pb-2" style="text-align: center; margin-top: -45px">
+            <h3 class="text-primary"> Create Member</h3>
+            <hr/>
+                <ul style="list-style-type:none;">
+
+                    <li> 
+                        <input asp-for="FirstName" class="field-divided" placeholder="First Name" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                        <input asp-for="LastName" placeholder="Last Name "/>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </li>
+                    <br/>
+                    <li>
+                        <input asp-for="Email" class="form-divided" placeholder="eMail" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </li>
+                    <br />
+                    <li>
+                        <input asp-for="PhoneNumber" class="form-divided" placeholder="Phone Number" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                       
+                    </li>
+                    <br/>
+                    <li>
+                        <Label>Email Confirmed</Label>
+                        <select asp-for="EmailConfirmed" class="form-divided">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </li>
+                    <li>
+                        <Label>Member Status</Label>
+                        <select asp-for="MemberStatus" class="form-divided">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </li>
+                    <li>
+                        <Label>Member Type</Label>
+                        <select asp-for="MemberType" class="form-divided">
+                            <option value="TBRes">TB Resident Golfer</option>
+                            <option value="NRes">Non Resident Golfer</option>
+                            <option value="TBSoc">TB Resident Social </option>
+                            <option value="NSoc">Non Resident Social </option>
+                        </select>
+                    </li>
+                    <li>
+                        <Label>Member Notification Preference</Label>
+                        <select asp-for="PreferredNotification" class="form-divided">
+                            <option value="Email">Email</option>
+                            <option value="Text">Text</option>
+                            <option value="Both">Both Email & Text</option>
+                        </select>
+                    </li>
+                    <li>
+                        <Label>Member Tee Box></Label>
+                        <select asp-for="MemberTee" class="form-divided">
+                            <option value="Black">Black</option>
+                            <option value="Blue">Blue</option>
+                            <option value="White">White</option>
+                            <option value="Gold">Gold</option>
+                            <option value="Red">Red</option>
+                        </select>
+                    </li>
+                </ul>
+        </div>
+       </div>
+     </div>
+    <div class="row">
+        <div class="col-6">
+            <button type="submit" class="btn btn-primary form-control">Create</button>
+        </div>
+        <div class="col-6">
+            <a asp asp-controller="Member" asp-action="Index" class="btn btn-secondary form-control">
+                Back to List
+            </a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

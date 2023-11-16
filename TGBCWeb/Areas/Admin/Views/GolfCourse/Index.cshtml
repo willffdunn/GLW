@@ -1,0 +1,101 @@
+﻿@model List<GolfCourse>
+<partial name="pvNotification"/>
+
+<div class-"container" style="width:100%">
+    <div class="row pt-2 pb-1">
+        <div class="col=4" style="margin-top: -50px">
+            <h3 class=" text-primary" style="text-align:center">Golf Course List</h3>
+        </div>
+        <div class="col=6 " >
+            <a  asp-controller="GolfCourse" asp-action="Upsert" class="btn btn-primary">
+                Add Golf Course
+                <i class="bi bi-plus-circle"></i>
+            </a>
+        </div>
+    </div>
+ 
+    <div >
+<table class="table table-bordered table-striped " >
+     <thead style="background-color:orange">
+
+        <tr >
+            <th>
+              Course
+            </th>
+            <th>
+              Holes
+            </th>
+            <th>
+              Course Name
+            </th>
+            <th>
+              Street
+            </th>
+            <th>
+              City
+            </th>
+            <th>
+              State
+            </th>
+            <th>
+                Phone
+            </th>
+            <th>
+                Delete
+            </th>
+            
+        </tr>
+    </thead>
+   <tbody>
+
+        @foreach(var obj in Model)
+        {
+             <tr >
+                <th> 
+                    <div class="w-50 bntn-group" role="group">
+                            <a asp-controller="GolfCourse" asp-action="Upsert" asp-route-GCID="@obj.GCId" class="btn btn-primary">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                    </div>
+                </th>
+                    <th>
+                        <div class="w-50 bntn-group" role="group">
+                            <a asp-controller="GolfCourseHole" asp-action="Index" asp-route-GCId="@obj.GCId" class="btn btn-primary">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </div>
+                <th>
+
+                <a href="GolfCourse/Upsert?GCID=@obj.GCId"> @obj.GCName </a>
+                </th>
+                <th>
+                    @obj.GCStreet
+                </th>
+                <th>
+                    @obj.GCCity
+                </th>
+                <th>
+                    @obj.GCState
+                </th>
+                <th>
+                    @obj.GCPhoneNumber
+                </th>
+                 <th>
+                    <div class="w-50 bntn-group" role="group" >
+                        <a asp-controller="GolfCourse" asp-action="Delete" asp-route-GCID="@obj.GCId" class="btn btn-danger" >
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </div>
+                </th>
+         </tr>
+
+        }
+
+
+   </tbody>
+
+</table>
+   
+</div>
+
+</div>

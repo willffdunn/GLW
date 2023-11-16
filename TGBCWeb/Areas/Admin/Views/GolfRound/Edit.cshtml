@@ -1,0 +1,71 @@
+﻿\@using Models;
+@model GolfRound 
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<partial name="pvNotification" />
+
+<div style="margin-left: -80px">
+    <form method="post">
+        <div class="pt-4 mt-3">
+            <div >
+                <div class="row pb-2">
+                    <h3 class="text-primary"> Manage a Golf Round</h3>
+
+                    <hr />
+                    <ul style="list-style-type:none;">
+                        <li>
+                            <input type="hidden" asp-for="GCId" />
+                            <input type="hidden" asp-for="GRId" />
+                            <input disabled asp-for="@Model.GolfCourse.GCName" class="field-divided" placeholder="Course Name" size="50" />
+                            <span asp-validation-for="@Model.GolfCourse.GCName" class="text-danger"></span>
+
+                        </li>
+                        <br />
+                        <li>
+                            <Label>Round Type</Label>
+                            <select asp-for="GRType" class="form-divided">
+                                <option value="TBGC, Stroke Play">TBGC, Stroke Play</option>
+                                <option value="TBGC, Stroke Play">Member, Stroke Play</option>
+                            </select>
+                        </li>
+                        <br />
+                        <li>
+                        <Label>Round Date</Label>
+                            <input type="Date" asp-for="GRDate" class="field-divided" placeholder="Round Date" size="50" />
+                            <span asp-validation-for="GRDate" class="text-danger"></span>
+                        </li>
+                        <br />
+
+
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <button type="submit" class="btn btn-primary ">Save Changes</button>
+            </div>
+            <div class="col-6">
+                <a asp asp-controller="GolfRound" asp-action="Index" class="btn btn-primary">
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts {
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}
+
+
+
+
+
+
+
+
+

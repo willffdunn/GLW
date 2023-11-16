@@ -1,0 +1,99 @@
+﻿@model GolfPlayer
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<partial name="pvNotification" />
+
+<div style="margin-top: -50px">
+    <form method="post">
+        <div class="pt-4 mt-3" >
+            <div asp-validation-summary="All">
+                <div class="row pb-2" >
+                    <h3 style="text-align:center">
+                     @(Model.GPId != 0 ? "Update" : "Add") a Golf Player</h3>
+                    <h3 style="text-align:center">@ViewBag.GCName -  @ViewBag.GRDate</h3>
+                    <div class="col-6" style="margin-left: 170px">
+                        <hr stle="text-align: center"/>
+                          <ul style="list-style-type:none;">
+                            <li>
+                            @if (Model.GPId != 0)
+                                {
+                                    <input type="hidden" asp-for="GGId" />
+                                    <Label>Player</Label>
+                                    <select asp-for="MemberId" asp-items="ViewBag.MemberList" class="form-divided" >
+                                        <span asp-validation-for="MemberId" class="text-danger"></span>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <br/>
+                                    <select asp-for="MemberId" asp-items="ViewBag.MemberList" class="form-divided">
+                                        <option >--Select Member--</option>
+                                        <label asp-for=MemberId></label>
+                                        <span asp-validation-for="MemberId" class="text-danger"></span>
+                                    </select>
+                                }
+                               </li>
+                               <br/>
+                            <li>
+                                @if (Model.GPId != 0)
+                                {
+                                    <select asp-for="GGId" asp-items="ViewBag.GroupList" class="form-divided">
+                                        <option>--Select Group--</option>
+                                        <label asp-for=GGId></label>
+                                        <span asp-validation-for="GGId" class="text-danger"></span>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select asp-for="GGId" asp-items="ViewBag.GroupList" class="form-divided">
+                                        <option>--Select Group--</option>
+                                        <label asp-for=GGId></label>
+                                        <span asp-validation-for="GGId" class="text-danger"></span>
+                                    </select>
+                                }
+                            </li>
+                                <br />
+                                <li>    
+                                <select asp-for="GPType" >
+                                    <option>--Select Player Type--</option>
+                                    <option value="Member">Member</option>
+                                    <option value="Guest">Guest</option>
+                                </select>
+                            </li>
+                            <br />
+                            <li>
+                                <input asp-for="GPFName" class="col-xs-3" placeholder="Guest First Name" size="15" />
+                                <span asp-validation-for="GPFName" class="text-danger"></span>
+                                <input asp-for="GPLName" class="col-xs-4" placeholder="Guest Last Name" size="15" />
+                                <span asp-validation-for="GPLName" class="text-danger"></span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-6">
+                @if (Model.GPId != 0)
+                {
+                    <button type="submit" class="btn btn-primary form-control">Update Changes</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary form-control">Add Player</button>
+                }
+            </div>
+            <div class="col-6">
+                <a asp asp-controller="GolfPlayer" asp-action="Index" asp-route-GGId="@ViewBag.GGId" class="btn btn-secondary form-control">
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

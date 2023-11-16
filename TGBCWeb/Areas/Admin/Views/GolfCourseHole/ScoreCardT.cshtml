@@ -1,0 +1,444 @@
+﻿@model List<GolfCourseHole>
+<partial name="pvNotification" />
+
+<div class-"container">
+    <div class="row pt-2 pb-1" > 
+        <div class="col=6">
+            <h3><label for="GolfCourseHoles[1].GCName"> @Model[1].GCName </label></h3>
+            <h3 style="text-align:center">
+              Scorecard 
+            </h3>
+            
+        </div>
+    </div>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            text-align:center;
+          
+        }
+        td {
+            height: 40px;
+        }
+        tr:nth-child(1) {
+            background-color: green;
+            color: white;
+        }
+
+        tr:nth-child(2) {
+            background-color: @Model[1].GolfCourse.GCT1;
+            color: @Model[1].GolfCourse.GCC1;
+        }
+
+        tr:nth-child(3) {
+            background-color: @Model[1].GolfCourse.GCT2;
+            color: @Model[1].GolfCourse.GCC2;
+        }
+
+        tr:nth-child(4) {
+             background-color: @Model[1].GolfCourse.GCT3;
+            color: @Model[1].GolfCourse.GCC3;
+        }
+
+        tr:nth-child(5) {
+           background-color: @Model[1].GolfCourse.GCT4;
+            color: @Model[1].GolfCourse.GCC4;
+        }
+
+        tr:nth-child(12) {
+           background-color: @Model[1].GolfCourse.GCT5;
+            color: @Model[1].GolfCourse.GCC5;
+        }
+        th {
+            background-color: green;
+            color: white;
+        }
+
+        .T1 {
+            background-color: white;
+            color: black;
+            
+        }
+
+        .T2 {
+            background-color: wheat;
+            color: black;
+        }
+    </style>
+    <table border="0" >
+        <thead>
+            <tr>
+                <td>
+                    <table  >
+                        <thead>
+                            <tr>
+                                <th width="270px">
+                                    Hole
+                                </th>
+                                <th>1</th>
+                                <th>2</th>
+                                <th>3</th>
+                                <th>4</th>
+                                <th>5</th>
+                                <th>6</th>
+                                <th>7</th>
+                                <th>8</th>
+                                <th>9</th>
+                                <th>Out</th>
+                                <th>10</th>
+                                <th>11</th>
+                                <th>12</th>
+                                <th>13</th>
+                                <th>14</th>
+                                <th>15</th>
+                                <th>16</th>
+                                <th>17</th>
+                                <th>18</th>
+                                <th width="50px">In</th>
+                                <th>Total</th>
+                            </tr>
+                          </thead>
+                        <tbody>
+                            <tr><img src="~/Palm-Beach-National.jpg"> </tr>
+                               <tr>
+                                <td maxlength="5">@Model[1].GolfCourse.GCT1</td>
+                                    
+                                    @for (int i = 0; i < 9; i++)
+                                    {
+                                        <td maxlength="5" style="width: 50px">
+                                            @Model[i].GHT1
+                                        </td>
+                                    }
+                                    <td>@Model[1].GolfCourse.GCT1TotOut</td>
+                                    @for (int i = 0; i < 9; i++)
+                                    {
+                                    <td maxlength="5" style="width: 50px">
+                                             @Model[i].GHT1
+                                    </td>
+                                    }
+                                    <td>@Model[1].GolfCourse.GCT1TotIn</td>
+                                    <td>@Model[1].GolfCourse.GCT1Tot</td>
+                                </tr>
+                               <tr>
+                                    <td maxlength="5"> @Model[1].GolfCourse.GCT2</td>
+                                     
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                            <td maxlength="5" style="width: 50px">
+                                                @Model[i].GHT2
+                                            </td>
+                                        }
+                                        <td>@Model[1].GolfCourse.GCT2TotOut</td>
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px">
+                                                @Model[i].GHT2
+                                        </td>
+                                        }
+                                        <td>@Model[1].GolfCourse.GCT2TotIn</td>
+                                        <td>@Model[1].GolfCourse.GCT2Tot</td>
+                                </tr>
+                                <tr>
+                                    <td maxlength="5"> @Model[1].GolfCourse.GCT3</td>
+
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 5px">
+                                                @Model[i].GHT3
+                                        </td>
+                                        }
+                                         <td>@Model[1].GolfCourse.GCT3TotOut</td>
+                                            @for (int i = 0; i < 9; i++)
+                                            {
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHT3
+                                            </td>
+                                                    }
+                                        <td>@Model[1].GolfCourse.GCT3TotIn</td>
+                                        <td>@Model[1].GolfCourse.GCT3Tot</td>
+                                </tr>
+                                <tr>
+                                    <td maxlength="5">@Model[1].GolfCourse.GCT4</td>
+
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px">
+                                                @Model[i].GHT4
+                                        </td>
+                                        }
+                                        <td>@Model[1].GolfCourse.GCT4TotOut</td>
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px">
+                                                @Model[i].GHT4
+                                        </td>
+                                        }
+                                        <td>@Model[1].GolfCourse.GCT4TotIn</td>
+                                        <td>@Model[1].GolfCourse.GCT4Tot</td>
+                                </tr>
+                                <tr class="T2">
+                                    <td maxlength="5" class="T2">Par</td>
+
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px" class="T2">
+                                                @Model[i].GHPar
+                                        </td>
+                                        }
+                                        <td>@Model[1].GolfCourse.GCParOut</td>
+                                        @for (int i = 9; i < 18; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px" class="T2">
+                                                @Model[i].GHPar
+                                        </td>
+                                        }
+                                        <td>@Model[1].GolfCourse.GCParIn</td>
+                                        <td>@Model[1].GolfCourse.GCParTot</td>
+                                </tr>
+                                <tr class="T1">
+                                    <td maxlength="5" class="T1">PlayerNbrOne</td>
+
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px">                                      0
+                                        </td>
+                                        }
+                                        <td>0</td>
+                               
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px">
+                                            0
+                                        </td>
+                                        }
+                                        <td>0</td>
+                                        <td>0</td>
+                                </tr>
+                                <tr class="T1">
+                                    <td maxlength="5" class="T1">Player2</td>
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px">
+                                            0
+                                        </td>
+                                        }
+                                        <td>0</td>
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px">
+                                            0
+                                        </td>
+                                        }
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr class="T1">
+                                    <td maxlength="5" class="T1">Player3</td>
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px">
+                                            0
+                                        </td>
+                                        }
+                                        <td>0</td>
+                                  
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px">
+                                            0
+                                        </td>
+                                        }
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr class="T1">
+                                    <td maxlength="5" class="T1">Player4</td>
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px">
+                                            0
+                                        </td>
+                                        }
+                                        <td>0</td>
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                        <td maxlength="5" style="width: 50px">
+                                               0
+                                        </td>
+                                        }
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr class="T2">
+                                    <td maxlength="5" class="T2">Handicap</td>
+
+                                    @for (int i = 0; i < 9; i++)
+                                    {
+                                        <td maxlength="5" style="width: 50px" class="T2">
+                                            @Model[i].GHHandicap
+                                        </td>
+                                    }
+                                    <td></td>
+                                    @for (int i = 9; i < 18; i++)
+                                    {
+                                        <td maxlength="5" style="width: 50px" class="T2">
+                                            @Model[i].GHHandicap
+                                        </td>
+                                    }
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                    <tr class="T1">
+                                        <td maxlength="5">@Model[1].GolfCourse.GCT5</td>
+
+                                            @for (int i = 0; i < 9; i++)
+                                            {
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHT5
+                                            </td>
+                                            }
+                                            <td>@Model[1].GolfCourse.GCT5TotOut</td>
+                                            @for (int i = 0; i < 9; i++)
+                                            {
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHT5
+                                            </td>
+                                                    }
+                                        <td>@Model[1].GolfCourse.GCT5TotIn</td>
+                                        <td>@Model[1].GolfCourse.GCT5Tot</td>
+                         
+                                    </tr>
+                        </tbody>
+                    </table>
+                </td>
+        </thead>
+    
+    </table>
+    @if (@Model.Count == 27)
+    {
+        <table style="width:50%">
+            <thead>
+                <tr>
+                    <td>
+                        <table width="50%">
+                            <thead>
+                                <tr>
+                                    <th>@Model[19].GHSectName</th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Edit
+                                    </th>
+                                    <th>
+                                        Hole Number
+                                    </th>
+                                    <th>
+                                        Par
+                                    </th>
+                                    <th>
+                                        Handicap
+                                    </th>
+                                    <th>
+                                        Tee 1
+                                    </th>
+                                    <th>
+                                        Tee 2
+                                    </th>
+                                    <th>
+                                        Tee 3
+                                    </th>
+                                    <th>
+                                        Tee 4
+                                    </th>
+                                    <th>
+                                        Tee 5
+                                    </th>
+                                </tr>
+                            <tbody>
+                                    @for (int i = 18; i < 27; i++)
+                                    {
+                                        @if (@Model[i].GHHole == 1)
+                                        {
+                                        <tr class="t1">
+                                            <td maxlength="5" style="width: 50px">
+                                                <div class="w-50 bntn-group" role="group">
+                                                    <a asp-controller="GolfCourseHole" asp-action="Edit" asp-route-GHId="@Model[i].GHId" class="btn btn-primary">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHHole
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHPar
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHHandicap
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHT1
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHT2
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHT3
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHT4
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHT5
+                                            </td>
+                                        </tr>
+                                        }
+                                        @if (@Model[i].GHHole == 2)
+                                        {
+                                        <tr class="t2">
+                                            <td maxlength="5" style="width: 50px">
+                                                <div class="w-50 bntn-group" role="group">
+                                                    <a asp-controller="GolfCourseHole" asp-action="Edit" asp-route-GHId="@Model[i].GHId" class="btn btn-primary">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHHole
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHPar
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHHandicap
+                                            </td>
+                                        </tr>
+                                        }
+                                        @if (@Model[i].GHHole != 2 & @Model[i].GHHole != 1)
+                                        {
+                                        <tr class="t3">
+                                            <td maxlength="5" style="width: 50px">
+                                                <div class="w-50 bntn-group" role="group">
+                                                    <a asp-controller="GolfCourseHole" asp-action="Edit" asp-route-GHId="@Model[i].GHId" class="btn btn-primary">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHHole
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHPar
+                                            </td>
+                                            <td maxlength="5" style="width: 50px">
+                                                    @Model[i].GHHandicap
+                                            </td>
+                                        </tr>
+                                        }
+                                    }
+                            </tbody>
+                        </table>
+                    </td>
+        </table>
+    }
+</div>

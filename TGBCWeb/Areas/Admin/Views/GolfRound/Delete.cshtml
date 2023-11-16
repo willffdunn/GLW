@@ -1,0 +1,44 @@
+﻿@model GolfRound
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<partial name="pvNotification" />
+
+<div class="container-fluid" style="margin-top: -45px">
+    <form method="post">
+        <div class="pt-4 mt-3">
+            <div asp-validation-summary="All">
+                <div class="row pb-2">
+                    <h3 style="text-align:center">
+                        Delete a Golf Round
+                    </h3>
+                    <h3 style="text-align:center">
+                        @ViewBag.GCName -  @ViewBag.GRDate</h3>
+
+                    <hr />
+                    <div class="col-12" style="margin-left: 150px">
+                        <ul style="list-style-type:none;">
+                            <li>
+                                <input disabled asp-for=@Model.GRType style="width: 250px" class="form-divided">
+                            </li> 
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6" style="text-align:center">
+                <button type="submit" class="btn btn-primary form-control">Delete Round</button>
+            </div>
+            <div class="col-6">
+                <a asp-controller="GolfRound" asp-action="Index" class="btn btn-secondary form-control">
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

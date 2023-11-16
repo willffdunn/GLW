@@ -1,0 +1,73 @@
+﻿@model GolfRound
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<partial name="pvNotification" />
+
+<div style="margin-top: -60px">
+    <form method="post" class="form-inline">
+        <div class="pt-4 mt-3">
+            <div asp-validation-summary="All">
+                <li class="row pb-2" style="margin-left: -60px">
+                    <h3 style="text-align:center">@(Model.GRId != 0 ? "Update" : "Add") a Golf Round</h3>
+
+                    <hr />
+                    <ul style="list-style-type:none; text-align:center">
+                         <li>
+                            @if (Model.GRId != 0)
+                            {
+                                <input type="hidden" asp-for="GCId" />
+                                <input type="hidden" asp-for="GRId" />
+                                <input disabled asp-for="@Model.GolfCourse.GCName" class="field-divided" placeholder="Course Name" size="75" />
+                                <span asp-validation-for="@Model.GolfCourse.GCName" class="text-danger"></span>
+                            }
+                            else
+                            {
+                                <select asp-for="GCId" asp-items="ViewBag.GolfCourseList" class="form-divided" width="70px">
+                                    <option disabled selected>--Select Golf Course--</option>
+                                    <label asp-for=GCId></label>
+                                    <span asp-validation-for="GCId" class="text-danger"></span>
+                                </select>
+                            }
+                        </li>
+                        <br />
+                        <li>
+                            <label>Round Type</label>
+                            <select asp-for="GRType" class="form-divided">
+                                <option value="TBGC, Stroke Play">TBGC, Stroke Play</option>
+                                <option value="Member, Stroke Play">Member, Stroke Play</option>
+                            </select>
+                            
+                            <label>Round Date</label>
+                            <input type="Date" asp-for="GRDate" class="field-divided" placeholder="Round Date" size="50" />
+                            <span asp-validation-for="GRDate" class="text-danger"></span>
+                        </li>
+                        <br />
+                    </ul>
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-6">
+                @if (Model.GRId != 0)
+                {
+                    <button type="submit" class="btn btn-primary form-control">Update Changes</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary form-control">Add Round</button>
+                }
+            </div>
+            <div class="col-6">
+                <a asp asp-controller="GolfRound" asp-action="Index" class="btn btn-secondary form-control">
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts {
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

@@ -1,0 +1,49 @@
+﻿@model GolfGroup
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<partial name="pvNotification" />
+
+<div style="margin-top: -50px">
+    <form method="post">
+        <div class="pt-4 mt-3">
+            <div asp-validation-summary="All">
+                <div class="row pb-2" style="margin-left: -60px">
+                    <h3 class="text-primary" style="text-align:center">@ViewBag.GCName</h3>
+                    <h3 class="text-primary" style="text-align:center"> Update @Model.GGName @ViewBag.GRDate</h3>
+                    <ul style="list-style-type:none;">
+                        <li>
+                            <label>Group Name</label>
+                            <input type="hidden" asp-for="GGId" />
+                            <input type="hidden" asp-for="GRId" />
+                            <input asp-for="GGName" class="field-divided" size="50" />
+                            <span asp-validation-for="GGName" class="text-danger"></span>
+
+                            <label>Tee time</label>
+                            <input type="time" asp-for="GGTtime" class="field-divided" size="50" />
+                            <span asp-validation-for="GGTtime" class="text-danger"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <ul style="list-style-type:none;">
+                <li>
+                    <button type="submit" asp-controller="GolfGroup" asp-action="Upsert" asp-I class="btn btn-primary ">
+                        Update Changes</button>
+                    <a asp-controller="GolfGroup" asp-action="Index" asp-route-GRId=@Model.GRId class="btn btn-primary" class="form-divided">
+                        Back to List</a>
+                    <a asp-controller="GolfPlayer" asp-action="Index" asp-route-GGId=@Model.GGId class="btn btn-primary" class="form-divided">
+                        Add Player
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </form>
+</div>
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

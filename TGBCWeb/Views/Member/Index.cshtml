@@ -1,0 +1,95 @@
+﻿@model List<Member>
+<partial name="pvNotification"/>
+
+<div class-"container" style="margin-top: -50px ">
+    <div class="row pt-2 pb-1">
+        <div class="col=6" >
+         <h3 class=" text-primary, text-center" >
+            Member List
+         </h3>
+        </div>
+        <div class="col=6 align-text-left">
+            <a asp  asp-controller="Member" asp-action="Create" class="btn btn-primary">
+                Create New Member
+                <i class="bi bi-plus-circle"></i>
+            </a>
+        </div>
+    </div>
+  <div  >
+<table class="table table-bordered table-striped " >
+     <thead style="background-color:lightblue">
+
+        <tr >
+            <th>
+              Edit
+            </th>
+            <th>
+              Member Name
+            </th>
+
+            <th>
+              Member eMail
+            </th>
+            <th>
+              Member Status
+            </th>
+            <th>
+              Member Type
+            </th>
+            <th>
+                Phone
+            </th>
+            <th>
+                Delete
+            </th>
+            
+        </tr>
+    <thead>
+   <tbody>
+
+        @foreach(var obj in Model)
+        {
+            <tr>
+                <th> 
+                    <div class="w-50 bntn-group" role="group">
+                            <a asp-controller="Member" asp-action="Edit" asp-route-MemberId="@obj.MemberId" class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </div>
+                </th>
+                <th>
+                    <a href="Member/Browse?MemberId=@obj.MemberId">
+                                @obj.FirstName  @obj.LastName
+                    </a>
+                </th>
+
+                <th>
+                    @obj.Email
+                </th>
+                <th>
+                    @obj.MemberStatus
+                </th>
+                <th>
+                    @obj.MemberType
+                </th>
+                <th>
+                    @obj.PhoneNumber
+                </th>
+                    <th>
+                        <div class="w-50 bntn-group" role="group" >
+                            <a asp-controller="Member" asp-action="Delete" asp-route-MemberId="@obj.MemberId" class="btn btn-danger" >
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </div>
+                    </th>
+            </tr>
+
+        }
+
+
+   </tbody>
+
+</table>
+   
+</div>
+</div>

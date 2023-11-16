@@ -1,0 +1,24 @@
+﻿@if (@TempData["Success"] != null)
+{
+    <script src="~lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js"></script> 
+    <script type="text/javascript">
+        toastr.success('@TempData["success"]');
+        toastr.options.positionClass = "toast-bottom-left";
+    </script>
+
+    <h6 style="text-align:right">&nbsp;&nbsp; @TempData["success"]</h6>
+   
+}
+@if (@TempData["Info"] != null)
+{
+    <script src="~lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.js"></script>
+    <script type="text/javascript">
+        toastr.info('@TempData["info"]');
+        toastr.options.positionClass = "toast-bottom-left";
+    </script>
+
+    <h6 style="text-align:right">@TempData["info"]</h6>
+   
+}

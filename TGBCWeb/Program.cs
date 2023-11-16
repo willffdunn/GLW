@@ -21,11 +21,13 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
+builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLocalService>();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDBContext>().AddDefaultTokenProviders();
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IDBInitializer, DbInitializer>();
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
 
 
 
@@ -43,18 +45,18 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-string accountSid = "AC37f20763ac3b293f908e1e0290b3dcd1";
-string authToken = "c4937d899e21f3e4df66b1d65c91eccb";
+//string accountSid = "AC37f20763ac3b293f908e1e0290b3dcd1";
+//string authToken = "c4937d899e21f3e4df66b1d65c91eccb";
 
-TwilioClient.Init(accountSid, authToken);
+//TwilioClient.Init(accountSid, authToken);
 
-var message = MessageResource.Create(
-    body: "This is the ship that made the Kessel Run in fourteen parsecs?",
-    from: new Twilio.Types.PhoneNumber("+18445130861"),
-    to: new Twilio.Types.PhoneNumber("+14848857000")
-);
+//var message = MessageResource.Create(
+  //  body: "This is the ship that made the Kessel Run in fourteen parsecs?",
+    //from: new Twilio.Types.PhoneNumber("+18445130861"),
+    //to: new Twilio.Types.PhoneNumber("+14848857000")
+//);
 
-Console.WriteLine(message.Sid);
+//Console.WriteLine(message.Sid);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

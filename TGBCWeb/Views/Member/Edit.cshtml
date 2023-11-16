@@ -1,0 +1,49 @@
+﻿@model Member
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<form method="post">
+    <div class="pt-4 mt-3" >
+        <div asp-validation-summary="All">
+            <div class="row pb-2" style="text-align:center; margin-top: -45px">
+            <h3 background-image: url("002-swing.png"; class="text-primary"> Update Member</h3>
+            <hr/>
+                <ul style="list-style-type:none;">
+                    <li> 
+                            <input asp-for="FirstName" class="field-divided" placeholder="First Name" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                            <input asp-for="LastName" placeholder="Last Name "/>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                    </li>
+                    <br/>
+                    <li>
+                            <input asp-for="Email" class="form-divided" placeholder="eMail" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                    </li>
+                    <br />
+                    <li>
+                        <input asp-for="PhoneNumber" class="form-divided" placeholder="Phone Number" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                       
+                    </li>
+                    <br/>
+                    <li>
+                        <Label>Member Status</Label>
+                        <select asp-for="MemberStatus" class="form-divided">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <button type="submit" class="btn btn-primary form-control">Edit</button>
+        </div>
+        <div class="col-6">
+            <a asp asp-controller="Member" asp-action="Index" class="btn btn-secondary form-control">
+                Back to List
+            </a>
+        </div>
+    </div>
+</form>

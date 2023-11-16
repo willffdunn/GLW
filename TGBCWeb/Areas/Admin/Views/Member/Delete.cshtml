@@ -1,0 +1,98 @@
+﻿@using Models 
+@model Member
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<form method="post">
+    <div class="pt-4 mt-3">
+        <div asp-validation-summary="All">
+            <div class="row pb-2" style="text-align: center; margin-top: -45px">
+                <h3 class="text-primary"> Delete Member</h3>
+                <hr />
+                <ul style="list-style-type:none;">
+
+                    <li>
+                        <input asp-for="FirstName" disabled class="field-divided" placeholder="First Name" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                        <input asp-for="LastName" disabled placeholder="Last Name " />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </li>
+                    <br />
+                    <li>
+                        <input asp-for="Email" disabled class="form-divided" placeholder="eMail" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+
+                        <input asp-for="PhoneNumber" disabled class="form-divided" placeholder="Phone Number" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+                        <Label>Email Confirmed</Label>
+                        <select asp-for="EmailConfirmed" disabled class="form-divided">
+                            <option value="False">False</option>
+                            <option value="True">True</option>
+                        </select>
+                    </li>
+                    <br />
+                    <li>
+                        <Label>Member Tee Box</Label>
+                        <select asp-for="MemberTee" disabled class="form-divided" placeholder="Tee Box">
+                            <option value="">-----</option>
+                            <option value="Black">Black</option>
+                            <option value="Blue">Blue</option>
+                            <option value="White">White</option>
+                            <option value="Gold">Gold</option>
+                            <option value="Red">Red</option>
+                        </select>
+
+                        <Label>Member Notification Preference</Label>
+                        <select asp-for="PreferredNotification" disabled class="form-divided">
+                            <option value="">-----</option>
+                            <option value="Email">Email</option>
+                            <option value="Text">Text</option>
+                            <option value="Both">Both Email & Text</option>
+                        </select>
+                    </li>
+                    <br />
+                    <li>
+                        <Label>Member Status</Label>
+                        <select asp-for="MemberStatus" disabled class="form-divided">
+                            <option value="">-----</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+
+                        <Label>Member Type</Label>
+                        <select asp-for="MemberType" disabled class="form-divided">
+                            <option value="">-----</option>
+                            <option value="TBRes">TB Resident Golfer</option>
+                            <option value="NRes">Non Resident Golfer</option>
+                            <option value="TBSoc">TB Resident Social </option>
+                            <option value="NSoc">Non Resident Social </option>
+                        </select>
+
+                        <Label>Handicap</Label>
+                        <input asp-for="Handicap" disabled class="form-divided" maxlength="5px" m />
+                        <span asp-validation-for="Handicap" class="text-danger"></span>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <button type="submit" class="btn btn-primary form-control">Create</button>
+        </div>
+        <div class="col-6">
+            <a asp asp-controller="Member" asp-action="Index" class="btn btn-secondary form-control">
+                Back to List
+            </a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

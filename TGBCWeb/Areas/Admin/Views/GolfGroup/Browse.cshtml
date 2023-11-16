@@ -1,0 +1,31 @@
+﻿@model GolfGroup
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<partial name="pvNotification" />
+
+<div class="container-fluid" style="margin-top: -50px">
+    <form method="post">
+        <div class="pt-4 mt-3">
+            <div asp-validation-summary="All">
+                <div class="row pb-2">
+                    <h2 style="text-align:center">@ViewBag.GCName -  @ViewBag.GRDate</h2>
+                    <h3 style="text-align:center">Browse a Golf Group</h3>
+                    <hr />
+                    <div class="col-12">
+                        <ul style="list-style-type:none; text-align:center">
+                            <li>
+                                <input disabled asp-for="GGName" class="form-divided" style="width: 250px">
+                                <input disabled asp-for="GGTtime" class="form-divided">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

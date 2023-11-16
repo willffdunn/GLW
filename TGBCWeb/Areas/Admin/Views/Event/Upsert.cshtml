@@ -1,0 +1,86 @@
+﻿@model Event
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<partial name="pvNotification" style="margin-left: -60px" />
+
+<div style="margin-top: -45px">
+    <form method="post">
+        <div class="pt-4 mt-3" style="text-align: center">
+         
+            <div asp-validation-summary="All">
+                <div class="row pb-2" >
+                    <h3 class="text-primary" style="text-align:center">@(Model.EvId != 0 ? "Update" : "Add an") Event</h3>
+                    <hr />
+                    <ul style="list-style-type:none;">
+                        <li>
+                            <input type="hidden" asp-for="EvId" />
+                            <input asp-for="EvShortDescription" placeholder="Event Short Description" style="width:400px; text-align:center" />
+                            <span asp-validation-for="EvShortDescription" class="text-danger"></span>
+                        </li>
+                        <br />
+                        <li>
+                            <Label>  Event Type</Label>
+                            <select asp-for="EvType" class="form-divided">
+                                <option value="Golf Round">Golf Round</option>
+                                <option value="Golf Dinner">Golf Dinner</option>
+                            </select>
+
+                            <input type="Date" asp-for="EvDate" class="field-divided" placeholder="Event Date" size="50" />
+                            <span asp-validation-for="EvDate" class="text-danger"></span>
+                        </li>
+                        <br />
+
+                        <li>
+                            <textarea id="summernote" name="EvDescription" style="text-align:center"
+                                asp-for="EvDescription" placeholder="Event Description"></textarea>
+                            <span asp-validation-for="EvDescription" class="text-danger"></span>
+
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4" style="text-align:center">
+                <button type="submit" class="btn btn-primary form-control">Save Changes</button>
+            </div>
+            <div class="col-4">
+                <a asp asp-controller="Event" asp-action="Index" class="btn btn-secondary form-control">
+                    Back to List
+                </a>
+            </div>
+            <div class="col-4">
+                <a asp asp-controller="Event" asp-action="EventEmail" asp-route-EvId=@Model.EvId class="btn btn-secondary form-control" >
+                    Email Event
+                </a>
+            </div>
+
+        </div>
+        <script>
+            $('#summernote').summernote({
+                placeholder: 'Hello Bootstrap 4',
+                tabsize: 2,
+                height: 100
+            });
+ 
+        </script>
+
+    </form>
+</div>
+@section Scripts {
+    
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}
+
+
+
+
+
+
+
+
+

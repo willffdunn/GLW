@@ -1,0 +1,74 @@
+﻿@using Models;
+@model EventEmailVM
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<partial name="pvNotification" />
+
+<div style="margin-top: -60px">
+    <form method="post" class="form-inline">
+        <div class="pt-4 mt-3" style="text-align:center">
+            <div asp-validation-summary="All">
+                <div class="row pb-2" >
+                    <h3 style="text-align:center">Email Event</h3>
+                    <h3 style="text-align:center">@Model.Event.EvShortDescription on @Model.Event.EvDate</h3>
+                </div>
+                <hr />
+                <div col="12" style="text-align:center">
+                    <input type="hidden" asp-for="@Model.Event.EvDate" />
+                    <input type="hidden" asp-for="@Model.Event.EvType" />
+
+                <li>
+                    <textarea name="EmailMessage" asp-for="@Model.EmailMessage" style="text-align:center" size="200" placeholder="Email Message"></textarea>
+                    <span asp-validation-for="@Model.EmailMessage" class="text-danger"></span>
+
+                </li>
+                  <table class="table">
+                    <thead style="background-color:lightblue">
+                        <tr>
+                            <th>
+                                Select Email Recepients
+                            </th>
+                            <th>
+                                
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>    
+                                <select asp-for="@Model.SelectedRecipients" asp-items="@Model.AvailableRecipients" SelectMode="multiple" class="form-divided" width="70px">
+                                    <option disabled selected>--  Email Recepients--</option>
+                                    <span asp-validation-for="@Model.SelectedRecipients" class="text-danger"></span>
+                                </select>
+                            </th>
+                            <th>
+                                <label> "Use CTRL + Click for Single Select"></label>
+
+                                <label> "Use Shift + Down Arrow + Click for Multiple Selections"></label>
+                            </th>
+                        </tr>
+                      </tbody>
+                </table>
+                <li>
+                    <textarea id="summernote" name="EvDescription" style="text-align:center" disabled size="700"
+                                asp-for="@Model.Event.EvDescription" placeholder="Event Description"></textarea>
+                    <span asp-validation-for="@Model.Event.EvDescription" class="text-danger"></span>
+               </li>
+                </div>
+            <div class="col-6">
+              <button type="submit" class="btn btn-primary form-control">Send Email</button>
+                <a asp asp-controller="Event" asp-action="Index" class="btn btn-secondary form-control">
+                    Back to List
+                </a>
+            </div>
+        </div>
+        </div>
+    </form>
+</div>
+@section Scripts {
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}
