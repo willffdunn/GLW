@@ -62,7 +62,7 @@
                 "family": "Gen5",
                 "capacity": 2
               },
-              "kind": "v12.0,user,vcore,serverless,freelimit",
+              "kind": "v12.0,user,vcore,serverless",
               "location": "[parameters('resourceLocation')]",
               "name": "tbgc/TBGCDB",
               "type": "Microsoft.Sql/servers/databases",
