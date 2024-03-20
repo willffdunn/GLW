@@ -245,7 +245,8 @@ namespace TBGCWeb.Areas.Admin.Controllers
                 return RedirectToAction("Index", new { GRId = obj.GRId });
             }
         }
-        
+
+        #region API CALLS
 
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(GolfGroup obj)
@@ -263,3 +264,4 @@ namespace TBGCWeb.Areas.Admin.Controllers
     }
 }
 
+    #endregion

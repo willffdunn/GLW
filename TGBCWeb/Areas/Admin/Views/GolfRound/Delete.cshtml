@@ -1,10 +1,8 @@
 ﻿@model GolfRound
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<partial name="pvNotification" />
-
-<div class="container-fluid" style="margin-top: -45px">
-    <form method="post">
+.<div class="container-fluid" style="margin-top: -45px">
+    <form id="deleteForm" method="post" action="@Url.Action("Delete", "GolfRound")">
         <div class="pt-4 mt-3">
             <div asp-validation-summary="All">
                 <div class="row pb-2">
@@ -18,6 +16,7 @@
                     <div class="col-12" style="margin-left: 150px">
                         <ul style="list-style-type:none;">
                             <li>
+                                <input hidden asp-for=@Model.GRId />
                                 <input disabled asp-for=@Model.GRType style="width: 250px" class="form-divided">
                             </li> 
                         </ul>
@@ -27,7 +26,9 @@
         </div>
         <div class="row">
             <div class="col-6" style="text-align:center">
-                <button type="submit" class="btn btn-primary form-control">Delete Round</button>
+                <button type="button" class="btn btn-primary form-control" onclick="confirmDelete()">
+                    <i class="bi bi-trash-fill"></i> Delete
+                </button>
             </div>
             <div class="col-6">
                 <a asp-controller="GolfRound" asp-action="Index" class="btn btn-secondary form-control">

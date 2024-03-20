@@ -1,15 +1,7 @@
 ﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using TBGC.DataAccess.Data;
-using DataAccess;
-using TBGC.DataAccess.Repository;
-using DataAccess.Repository;
-using TBGC.DataAccess.Repository.IRepository;
 using Models;
-using System;
-
+using TBGC.Utility;
 namespace TBGCWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -23,10 +15,18 @@ namespace TBGCWeb.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-       
-
             List<Member> objMemberList = _unitOfWork.Member.GetAll().OrderBy(p => p.LastName).ToList();
-            return View(objMemberList);
+            if (SD.LeagueId != 0)
+            {
+                List<Member> leagueList = objMemberList.Where(p => p.LId == Convert.ToInt32(SD.LeagueId)).ToList(); ;
+                return View(leagueList);
+            }
+            else
+            {
+                TempData["Message"] = "League not selected - LogIn";
+                return Redirect("/Identity/Account/Login");
+
+            }
         }
         public IActionResult Create()
         {
@@ -35,13 +35,11 @@ namespace TBGCWeb.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(Member obj)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("Create");
-            }
-            {
 
-                Member _obj = _unitOfWork.Member.Get(u => u.FullName == obj.FullName);
+            obj.LId = SD.LeagueId;
+
+                Member _obj = _unitOfWork.Member.Get(u => u.FullName == obj.FullName &
+                u.LId == SD.LeagueId);
                 if (_obj == null)
                 {
                     _unitOfWork.Member.Add(obj);
@@ -54,7 +52,7 @@ namespace TBGCWeb.Areas.Admin.Controllers
                     ModelState.AddModelError("LastName", "Duplicate names are not allowed.");
                     return View("Create");
                 }
-            }
+            
         }
         public IActionResult Edit(int? memberId)
         {

@@ -57,8 +57,9 @@ namespace TBGCWeb.Areas.Admin.Controllers
                                 member.EmailConfirmed = true;
                                 member.Handicap = int.Parse(worksheet.Cells[row, 7].Text);
                                 member.PreferredNotification = "Both";
-                                member.FullName = member.FirstName + member.LastName;
+                                member.FullName = member.FirstName + " " + member.LastName;
                                 member.MemberTee = "White";
+                                member.LId = 1;
                                 // Set other properties as needed
                             };
                             // Update the database with the data

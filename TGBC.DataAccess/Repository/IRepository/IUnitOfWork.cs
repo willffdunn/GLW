@@ -17,7 +17,9 @@ namespace DataAccess.Repository.IRepository
         IGolfPlayerRepository GolfPlayer { get; }
         IGolfPlayerScoreRepository GolfPlayerScore { get; }
         IEventRepository Event { get; }
-      
+        ILeagueRepository League { get; }
+        IEventParticipantRepository EventParticipant { get; }
+        void ClearChangeTracker();
         void Save();
     }
 

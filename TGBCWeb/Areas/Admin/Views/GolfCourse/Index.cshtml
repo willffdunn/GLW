@@ -1,5 +1,4 @@
 ﻿@model List<GolfCourse>
-<partial name="pvNotification"/>
 
 <div class-"container" style="width:100%">
     <div class="row pt-2 pb-1">
@@ -15,7 +14,7 @@
     </div>
  
     <div >
-<table class="table table-bordered table-striped " >
+<table id="gCTable" class="table table-bordered table-striped " >
      <thead style="background-color:orange">
 
         <tr >
@@ -36,6 +35,9 @@
             </th>
             <th>
               State
+            </th>
+            <th>
+                Zip
             </th>
             <th>
                 Phone
@@ -78,6 +80,9 @@
                     @obj.GCState
                 </th>
                 <th>
+                    @obj.GCZip
+                </th>
+                <th>
                     @obj.GCPhoneNumber
                 </th>
                  <th>
@@ -99,3 +104,8 @@
 </div>
 
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#gCTable').DataTable();
+    });
+</script>

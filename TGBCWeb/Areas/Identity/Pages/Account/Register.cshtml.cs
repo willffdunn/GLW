@@ -2,17 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
 using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +15,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
 using Models;
+using TBGC.Models;
 using TBGC.Utility;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TBGCWeb.Areas.Identity.Pages.Account
 {
@@ -109,28 +105,35 @@ namespace TBGCWeb.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-
             public string? Role { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
 
             [Required]
-            public string Name { get; set; }
-            public string? StreetAddress { get; set; }
+            public string FName { get; set; }
+            [Required]
+            public string LName { get; set; }
+            public string Name
+            {
+                get { return FName + " " + LName; }
+                set { }
+            }
+            [Required]
+            public string? Street { get; set; }
             public string? City { get; set; }
             public string? State { get; set; }
             public string? PostalCode { get; set; }
             public string? PhoneNumber { get; set; }
-            public int? CompanyId { get; set; }
+            public int? LId { get; set; }
             [ValidateNever]
-            public IEnumerable<SelectListItem> CompanyList { get; set; }
+            public IEnumerable<SelectListItem> LeagueList { get; set; }
 
         }
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-
+            List<Member> mList = _unitOfWork.Member.GetAll(includeProperties: "League").OrderBy(p => p.Email).ToList();
 
             Input = new()
             {
@@ -156,8 +159,7 @@ namespace TBGCWeb.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                user.StreetAddress = Input.StreetAddress;
-                user.City = Input.City;
+                user.Street = Input.Street;
                 user.Name = Input.Name;
                 user.State = Input.State;
                 user.PostalCode = Input.PostalCode;
@@ -177,7 +179,7 @@ namespace TBGCWeb.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _userManager.AddToRoleAsync(user, SD.Role_Member);
+                        await _userManager.AddToRoleAsync(user, SD.Role_Member_Basic);
                     }
 
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -218,6 +220,26 @@ namespace TBGCWeb.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
+        public IActionResult OnGetGolfLeagues(string userEmail)
+        {
+            List<League> lList = _unitOfWork.League.GetAll().ToList();
+            List<Member> mList = _unitOfWork.Member.GetAll(includeProperties: "League").OrderBy(p => p.Email).ToList();
+            List<LeagueListVM> leagueListVMs = new List<LeagueListVM>();
+            if (mList != null)
+            {
+                List<Member> memberLeague = mList.Where(u => u.Email == userEmail).ToList();
+                foreach (Member lM in memberLeague)
+                {
+                    LeagueListVM leagueListVM = new LeagueListVM();
+                    League league = lList.Where(u => u.LId == lM.LId).FirstOrDefault();
+                    leagueListVM.LId = lM.LId;
+                    leagueListVM.LeagueName = league.LeagueName;
+                    leagueListVMs.Add(leagueListVM);
+                }
+                return new JsonResult(leagueListVMs);
+            }
+            return new JsonResult(leagueListVMs);
+        }
 
         private ApplicationUser CreateUser()
         {
@@ -243,5 +265,4 @@ namespace TBGCWeb.Areas.Identity.Pages.Account
         }
     }
 }
-
 

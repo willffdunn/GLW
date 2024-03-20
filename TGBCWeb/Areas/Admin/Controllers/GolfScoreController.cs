@@ -7,6 +7,8 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Scripting.Hosting;
+using DataAccess.Repository;
 
 namespace TBGCWeb.Areas.Admin.Controllers
 {
@@ -32,6 +34,8 @@ namespace TBGCWeb.Areas.Admin.Controllers
             ViewBag.GGId = GGId;
             return View();
 
+          
+
         }
         public IActionResult GPScoreM(int GPId)
         {
@@ -52,6 +56,7 @@ namespace TBGCWeb.Areas.Admin.Controllers
             ViewBag.GCName = gPSVM.GC.GCName;
             ViewBag.GRDate = gPSVM.GG.GolfRound.GRDate.ToShortDateString();
             ViewBag.PlayerName = gPSVM.GP.GPFName + ' ' + gPSVM.GP.GPLName;
+            ViewBag.Tot = gPSVM.GP.Tot3;
 
             return View(gPS);
         }
@@ -96,6 +101,8 @@ namespace TBGCWeb.Areas.Admin.Controllers
             ViewBag.GCName = gPSVM.GC.GCName;
             ViewBag.GRDate = gPSVM.GG.GolfRound.GRDate.ToShortDateString();
             ViewBag.PlayerName = gPSVM.GP.GPFName + ' ' + gPSVM.GP.GPLName;
+            ViewBag.Tot = gPSVM.GP.Tot3;
+
 
             ModelState.Clear();
 
@@ -144,6 +151,9 @@ namespace TBGCWeb.Areas.Admin.Controllers
             GGScoreVM gGs = new GGScoreVM();
             GPScoreVM gPScoreVM = new GPScoreVM();
             List<GPScoreVM> gPScoreVMs = new List<GPScoreVM>();
+
+
+
             ViewBag.GGId = _ggId; 
             foreach (GolfPlayer player in gPs)
             {
@@ -153,6 +163,147 @@ namespace TBGCWeb.Areas.Admin.Controllers
 
             gGs.GGS = gPScoreVMs;
             return View(gGs);
+       
+          
+
+        }
+        public IActionResult GGScoreZ(int GGId)
+        {
+            int _ggId = GGId;
+            if (_ggId == 0)
+            {
+                TempData["Info"] = "Golf Group Has no Players";
+                return RedirectToAction("GolfPlayer.Upsert", new { GGId = _ggId });
+
+            }
+            GolfGroup gG = _unitOfWork.GolfGroup.Get(p => p.GGId == _ggId,
+               includeProperties: "GolfRound");
+            if (gG == null)
+            {
+                TempData["Info"] = "Group doesn't exist";
+                return View();
+
+            }
+            GolfRound gR = _unitOfWork.GolfRound.Get(p => p.GRId == gG.GRId,
+                includeProperties: "GolfCourse");
+            if (gG == null)
+            {
+                TempData["Info"] = "Group doesn't exist";
+                return View();
+
+            }
+            List<GolfPlayer> gP = _unitOfWork.GolfPlayer.GetArray(p => p.GGId == _ggId,
+                includeProperties: "Member").ToList();
+            if (gP.Count == 0)
+            {
+                TempData["Info"] = "Group " + gG.GGName + " has no Players";
+                return RedirectToAction("Index2", "GolfPlayer", new { GRId = gG.GRId, GGId = _ggId });
+
+            }
+            GolfPlayerScore gPs = new GolfPlayerScore();
+            GPScoreVM gPScore = new GPScoreVM();
+           
+            List<GGScoreVP> gPScores = new List<GGScoreVP>();
+
+            for (int i = 0; i < gP.Count; i++)
+            {
+                GGScoreVP gGS = new GGScoreVP();
+                gPScore = GetGPScore(gP[i].GPId);
+                gGS.GPS = gPScore.GPS[0];
+                gGS.GP = gP[i];
+                gGS.GG = gG;
+                gPScores.Add(gGS);
+            }
+
+            ViewBag.GGId = gG.GGId;
+            ViewBag.GGName = gG.GGName;
+            TimeSpan gGtTimes = gG.GGTtime;
+            TimeOnly gTime = TimeOnly.FromDateTime(DateTime.Today.Add(gG.GGTtime));
+            ViewBag.GGTtime = gTime.ToShortTimeString();
+            ViewBag.GCName = gR.GolfCourse.GCName;
+            ViewBag.GRDate = gG.GolfRound.GRDate.ToShortDateString();
+          
+            ModelState.Clear();
+
+            return View("GGScoreZ", gPScores);
+
+        }
+        public IActionResult GGScoreP(int GHId, int GGId)
+        {
+            int _ggId = GGId;
+            int _ghId = GHId;
+            if (_ggId == 0)
+            {
+                TempData["Info"] = "Golf Group Has no Players";
+                return RedirectToAction("GolfPlayer.Upsert", new { GGId = _ggId });
+
+            }
+            if (_ghId == 0)
+            {
+                TempData["Info"] = "Golf Group Hole = 0";
+                return RedirectToAction("GolfPlayer.Upsert", new { GGId = _ggId });
+
+            }
+            GolfGroup gG = _unitOfWork.GolfGroup.Get(p => p.GGId == _ggId,
+               includeProperties: "GolfRound");
+            if (gG == null)
+            {
+                TempData["Info"] = "Group doesn't exist";
+                return View();
+
+            }
+            GolfRound gR = _unitOfWork.GolfRound.Get(p => p.GRId == gG.GRId,
+                includeProperties: "GolfCourse");
+            if (gG == null)
+            {
+                TempData["Info"] = "Group doesn't exist";
+                return View();
+
+            }
+            List<GolfPlayer> gP = _unitOfWork.GolfPlayer.GetArray(p => p.GGId == _ggId,
+                includeProperties: "Member").ToList();
+            if (gP.Count == 0)
+            {
+                TempData["Info"] = "Group " + gG.GGName + " has no Players";
+                return RedirectToAction("Index2", "GolfPlayer", new { GRId = gG.GRId, GGId = _ggId });
+
+            }
+            GolfPlayerScore gPs = new GolfPlayerScore();
+            GPScoreVM gPScore = new GPScoreVM();
+
+            List<GGScoreVP> gPScores = new List<GGScoreVP>();
+
+            int holeIndex = 0;
+
+            if (_ghId > 1)
+            {
+                holeIndex = _ghId - 2;
+            }
+            else
+            {
+                holeIndex = 0;
+            }
+            for (int i = 0; i < gP.Count; i++)
+            {
+                GGScoreVP gGS = new GGScoreVP();
+                gPScore = GetGPScore(gP[i].GPId);
+                gGS.GPS = gPScore.GPS[holeIndex];
+                gGS.GP = gP[i];
+                gGS.GG = gG;
+                gPScores.Add(gGS);
+            }
+
+            ViewBag.GGId = gG.GGId;
+            ViewBag.GGName = gG.GGName;
+            TimeSpan gGtTimes = gG.GGTtime;
+            TimeOnly gTime = TimeOnly.FromDateTime(DateTime.Today.Add(gG.GGTtime));
+            ViewBag.GGTtime = gTime.ToShortTimeString();
+            ViewBag.GCName = gR.GolfCourse.GCName;
+            ViewBag.GRDate = gG.GolfRound.GRDate.ToShortDateString();
+
+            ModelState.Clear();
+
+            return View("GGScoreZ", gPScores);
 
         }
         public IActionResult GRScore(int GRId)
@@ -210,7 +361,7 @@ namespace TBGCWeb.Areas.Admin.Controllers
         [Area("Admin")]
         [HttpPost]
         public IActionResult GPScoreM(GolfPlayerScore obj) {
-            if (!ModelState.IsValid)
+            if (obj == null)
             {
                 TempData["Info"] = "Golf Score update failed";
                 return View();
@@ -246,10 +397,15 @@ namespace TBGCWeb.Areas.Admin.Controllers
             }
             ViewBag.GGId = gPScoreVM.GG.GGId;
             ViewBag.GGName = gPScoreVM.GG.GGName;
-            ViewBag.GGTtime = gPScoreVM.GG.GGTtime;
+            TimeSpan gGtTimes = gPScoreVM.GG.GGTtime;
+            TimeOnly gTime = TimeOnly.FromDateTime(DateTime.Today.Add(gPScoreVM.GG.GGTtime));
+            ViewBag.GGTtime = gTime.ToShortTimeString();
             ViewBag.GCName = gPScoreVM.GC.GCName;
             ViewBag.GRDate = gPScoreVM.GG.GolfRound.GRDate.ToShortDateString();
             ViewBag.PlayerName = gPScoreVM.GP.GPFName + ' ' + gPScoreVM.GP.GPLName;
+
+            GolfPlayer gP = _unitOfWork.GolfPlayer.Get(P => P.GPId == gPSVM.GP.GPId); 
+            ViewBag.Tot = gP.Tot3;
 
             ModelState.Clear();
 
@@ -289,6 +445,86 @@ namespace TBGCWeb.Areas.Admin.Controllers
             }
                 return RedirectToAction("GGScore", new { GGId = gGs.GGS[0].GG.GGId });
         }
+        [HttpPost]
+        public IActionResult GGScoreZ(List<GGScoreVP> obj)
+        {
+            if (obj.Count == 0)
+            {
+                TempData["Info"] = "Golf Group Score update failed";
+                return View();
+            }
+            List<GGScoreVP> gGScoreVPs = obj;
+
+            int gPSHID = 0;
+           
+            GPScoreVM gPScoreVM = new GPScoreVM();
+            GolfRound gRR = new GolfRound();
+            GolfPlayer gPR = new GolfPlayer(); 
+
+            List<GGScoreVP> gGScoreVML = new List<GGScoreVP>();
+
+            for (int z = 0; z < gGScoreVPs.Count; z++)
+            {
+
+             GPScoreVM gPSVM = GetGPScore(gGScoreVPs[z].GPS.GPId);
+
+                for (int i = 0; i < 18; i++)
+                {
+                    if (gPSVM.GPS[i].GPSId == gGScoreVPs[z].GPS.GPSId)
+                    {
+                        gPSVM.GPS[i] = gGScoreVPs[z].GPS;
+                        gPSHID = i;
+                    }
+                }
+
+                 gPScoreVM = PostGPScore(gPSVM);
+           
+                GolfPlayerScore gPS = new GolfPlayerScore();
+
+                if (gPSHID <= 16)
+                {
+                    gPS = gPScoreVM.GPS[gPSHID + 1];
+                    gPSHID = gPSHID + 1;
+                }
+                else
+                {
+                    gPS = gPScoreVM.GPS[gPSHID];
+                    gPS.GolfCourseHole = gPScoreVM.GPS[gPSHID].GolfCourseHole;
+                    TempData["Info"] = "Last Golf Hole";
+                }
+                
+                    gPScoreVM.GPS[gPSHID] = gPS;
+
+
+
+                    gPR = _unitOfWork.GolfPlayer.Get(P => P.GPId == gPSVM.GP.GPId,
+                        includeProperties: "GolfGroup");
+                    GGScoreVP gGScoreVP = new GGScoreVP();
+
+                    gRR = _unitOfWork.GolfRound.Get(P => P.GRId == gPR.GolfGroup.GRId,
+                    includeProperties: "GolfCourse");
+                    gGScoreVP.GPS = gPS;
+                    gGScoreVP.GP = gPR;
+                    gGScoreVP.GG = gPR.GolfGroup;
+                    gGScoreVP.GC = gRR.GolfCourse;
+
+                    gGScoreVML.Add(gGScoreVP);
+            }
+
+            ViewBag.GGId = gGScoreVML[0].GG.GGId;
+            ViewBag.GGName = gGScoreVML[0].GG.GGName;
+            TimeSpan gGtTimes = gGScoreVML[0].GG.GGTtime;
+            TimeOnly gTime = TimeOnly.FromDateTime(DateTime.Today.Add(gGScoreVML[0].GG.GGTtime));
+            ViewBag.GGTtime = gTime.ToShortTimeString();
+            ViewBag.GCName = gGScoreVML[0].GC.GCName;
+            ViewBag.GRDate = gRR.GRDate.ToShortDateString();
+            
+
+            ModelState.Clear();
+
+           return View(gGScoreVML);
+        }
+
         [HttpPost]
         public IActionResult GRScore(List<GRScoreVM> obj)
         {
@@ -342,10 +578,12 @@ namespace TBGCWeb.Areas.Admin.Controllers
                     {
                         gp.FTot1 = gp.FTot1 + 1;
                     }
-
+              
                     _unitOfWork.GolfPlayerScore.Update(gps[i]);
                     _unitOfWork.Save();
-                };
+                    _unitOfWork.ClearChangeTracker();
+
+            };
                 for (int i = 9; i < 18; i++)
                 {
                     gp.Tot2 = gp.Tot2 + gps[i].GPSStrokes;
@@ -361,7 +599,7 @@ namespace TBGCWeb.Areas.Admin.Controllers
 
                     _unitOfWork.GolfPlayerScore.Update(gps[i]);
                     _unitOfWork.Save();
-                };
+            };
                 
                 gp.Tot3 = gp.Tot1 + gp.Tot2;
                 gp.PTot3 = gp.PTot1 + gp.PTot2;
@@ -370,8 +608,8 @@ namespace TBGCWeb.Areas.Admin.Controllers
 
                 _unitOfWork.GolfPlayer.Update(gp);
                 _unitOfWork.Save();
-                    
-                return (gpsVM);
+
+            return (gpsVM);
         }
 
         private GPScoreVM GetGPScore(int GPId)
@@ -439,14 +677,14 @@ namespace TBGCWeb.Areas.Admin.Controllers
                     gPs.GPSId = 0;
                     gPs.GPId = _gpId;
                     gPs.GPSStrokes = 0;
-                    gPs.GPSFW = "No";
-                    gPs.GPSGIY = "No";
+                    gPs.GPSFW = " ";
+                    gPs.GPSGIY = " ";
                     gPs.GPSPutts = 0;
                     gPs.GHId = gch.GHId;
-                    gPs.GolfCourseHole = gch;
 
+                   
                     _unitOfWork.GolfPlayerScore.Add(gPs);
-                    _unitOfWork.Save();
+                     _unitOfWork.Save();
                 };
             }
             GPScoreVM gPScoreVM = new GPScoreVM();

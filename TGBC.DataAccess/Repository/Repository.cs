@@ -25,7 +25,9 @@ namespace TBGC.DataAccess.Repository
             _db.GolfPlayers.Include(u => u.GolfGroup);
             _db.GolfPlayers.Include(u => u.Member);
             _db.GolfPlayerScores.Include(u => u.GolfCourseHole);
-           
+            _db.EvParticipants.Include(u => u.Event);
+          
+
 
 
 

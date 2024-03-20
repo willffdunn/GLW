@@ -1,18 +1,13 @@
-﻿
-using Microsoft.VisualBasic;
-using System;
-using System.Web;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Threading;
-using System.Xml;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using TBGC.Models;
 
 
 
-    public class Member
+public class Member
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -23,7 +18,10 @@ using System.Xml;
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$",
             ErrorMessage = "Invalid email address.")]
         public string Email { get; set; }
+        [DefaultValue(false)]
         public bool EmailConfirmed { get; set; }
+        [DefaultValue(false)]
+        public bool Registered { get; set; }
         public string PreferredNotification { get; set; }
 
         [DisplayName("Status")]
@@ -44,23 +42,29 @@ using System.Xml;
         [AllowNull]
         public string FullName
         {
-            get { return FirstName + LastName; }
+            get { return FirstName + " " + LastName; }
             set { }
         }
+        [Required]
+        public int LId { get; set; }
+        [Required]
+        [ForeignKey("LId")]
+        [ValidateNever]
+        public League League { get; set; }
 
-    }
-       
-   
-    
-
-
-
-
-
+}
 
 
 
 
-   
+
+
+
+
+
+
+
+
+
 
 

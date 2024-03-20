@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Linq.Expressions;
-using Models;
+using TBGC.Models;
 using Humanizer;
 using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -28,7 +28,7 @@ namespace TBGCWeb.Areas.Admin.Controllers
         public IActionResult Index()
         {
             List<GolfRound> objGRList = _unitOfWork.GolfRound.GetAll
-                (includeProperties: "GolfCourse").OrderBy(p => p.GCId).ToList();
+                (includeProperties: "GolfCourse").OrderByDescending(p => p.GRDate).ToList();
             if (objGRList == null)
             {
                 TempData["Success"] = "Golf Round Returned Null";
@@ -73,7 +73,9 @@ namespace TBGCWeb.Areas.Admin.Controllers
                 GolfRound _obj = _unitOfWork.GolfRound.Get(u => u.GRId == obj.GRId, includeProperties: "GolfCourse");
 
                 if (_obj== null)
+
                 {
+                    obj.LId = 1;
                     _unitOfWork.GolfRound.Add(obj);
                     _unitOfWork.Save();
                     TempData["Success"] = "GolfRound added successfully";

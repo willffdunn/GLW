@@ -2,27 +2,34 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Models;
+using TBGC.Models;
+using TBGC.Utility;
 
 namespace TBGCWeb.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IUnitOfWork _unitOfWork;
+
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -55,22 +62,41 @@ namespace TBGCWeb.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                ErrorMessage = "Invalid email address.")]
+            public string Email { get; set; }
+            public bool EmailConfirmed { get; set; }
             [Phone]
+            [RegularExpression(@"^\(?\d{3}\)?[-.]?\d{3}[-.]?\d{4}$",
+                ErrorMessage = "Invalid phone number.")]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            public string? Street { get; set; }
+            public string? City { get; set; }
+            public string? State { get; set; }
+            public string? PostalCode { get; set; }
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
+            var currentUser = await _userManager.GetUserAsync(User);
+            ApplicationUser appUser = (ApplicationUser)currentUser;
             Username = userName;
+            Input = new InputModel();
 
-            Input = new InputModel
-            {
-                PhoneNumber = phoneNumber
-            };
+            Input.FirstName = appUser.FirstName;
+            Input.LastName = appUser.LastName;
+            Input.Email = appUser.Email;
+            Input.EmailConfirmed = appUser.EmailConfirmed;
+            Input.PhoneNumber = phoneNumber;
+            Input.Street = appUser.Street;
+            Input.City = appUser.City;
+            Input.State = appUser.State;
+            Input.PostalCode = appUser.PostalCode;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -95,6 +121,7 @@ namespace TBGCWeb.Areas.Identity.Pages.Account.Manage
 
             if (!ModelState.IsValid)
             {
+                TempData["info"] = "Update failed - Invalid Model";
                 await LoadAsync(user);
                 return Page();
             }
@@ -102,17 +129,33 @@ namespace TBGCWeb.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                user.Street = Input.Street;
+                user.City = Input.City;
+                user.State = Input.State;
+                user.PostalCode = Input.PostalCode;
+                user.PhoneNumber = Input.PhoneNumber;
+
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    await _signInManager.RefreshSignInAsync(user);
+                    StatusMessage = "Your profile has been updated";
+                    TempData["info"] = "Your profile has been updated";
+
                     return RedirectToPage();
+                }
+                foreach (var error in result.Errors)
+                {
+                    TempData["info"] = "Update failed - Invalid Post";
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
 
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
-            return RedirectToPage();
+            // If we got this far, something failed, redisplay form
+            return Page();
+
+
         }
     }
 }

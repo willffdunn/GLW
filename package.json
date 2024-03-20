@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "@daypilot/daypilot-lite-javascript": "^3.19.0",
+    "@material/web": "^1.0.1"
+  },
+  "name": "tbgcpackage.json",
+  "version": "1.0.0",
+  "description": "TBGC Package.JSON file for use with npm installs",
+  "main": "index.js",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-uglify": "^3.0.2"
+  },
+  "scripts": {
+    "test": "?"
+  },
+  "repository": {
+    "type": "git",
+    "url": "TBGC"
+  },
+  "keywords": [
+    "Golf"
+  ],
+  "author": "Bill Dunn",
+  "license": "UNLICENSED"
+}

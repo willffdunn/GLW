@@ -2,7 +2,6 @@
 @using TBGC.Models;
 @model List<GolfPlayerVM>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<partial name="pvNotification" />
 
 <div class-"container" style="width:100%" >
      <form method="post">
@@ -24,7 +23,7 @@
     </div>
 
     <div style="text-align: center ">
-        <table class="table table-bordered table-striped ">
+        <table id="gPITable" class="table table-bordered table-striped ">
             <thead>
                 <tr>
                     <th>
@@ -82,6 +81,11 @@
     </div>
     </form>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#gPITable').DataTable();
+    });
+</script>
 
 
 @section Scripts {

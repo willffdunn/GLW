@@ -1,83 +1,187 @@
 ﻿@page
 @model LoginModel
 
-@{
-    ViewData["Title"] = "Log in";
-}
+<div class-"container" style="width:100%">
+    <style>
+        .separator {
+            position: relative;
+            text-align: center;
+        }
 
-<h1>@ViewData["Title"]</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <form id="account" method="post">
-                <h2>Use a local account to log in.</h2>
-                <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Input.Email" class="form-label">Email</label>
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.Password" class="form-label">Password</label>
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label">
-                        <input class="form-check-input" asp-for="Input.RememberMe" />
-                        @Html.DisplayNameFor(m => m.Input.RememberMe)
-                    </label>
-                </div>
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
-                </div>
-            </form>
-        </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
+        .or {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 0 10px;
+        }
+    </style>
+    <div class="row pt-2 pb-1" style="margin-top:-50px ">
+        <div class="col=4">
+            <h3 class=" text-primary" style="text-align:center">Member Log in</h3>
+        </div>
+        <br />
+        <br />
+        <div class="row" style="margin-left: 260px">
+            <div class="col-6" >
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                     <div>
                         <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
+                            @foreach (var provider in Model.ExternalLogins!)
+                            {
+
+                                @if (provider.Name == "Facebook")
+                                {
+                                    <button type="submit" class="w-100 btn btn-lg btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                        <i class="fab fa-facebook-square fa-3x"></i> @provider.DisplayName Sign in
+                                    </button>
+                                }
+                                <br />
+                                @if (provider.Name == "Google")
+                                {
+                                    <button type="submit" class="w-100 btn btn-lg btn-primary" style="background-color: white; color: black;" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                        <img src="~/googlesm.jpg" style="height:40px; margin-left: 0px; margin-bottom: 0px ">  @provider.DisplayName Sign in
+                                    </button>
+                                }
+                            }
                         </p>
                     </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
+                </form>
+                <div class="separator">
+                    <hr>
+                    <span class="or">or</span>
+                </div>
+                <form id="account" method="post" style="text-align: center">
+                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                    <div class="form-floating mb-3">
+                        <input type="hidden" asp-for="Input.UserName" />
+                        <input type="hidden" id="SelectedLeagueName" name="SelectedLeagueName" />
+                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <label asp-for="Input.Email" class="form-label">Email</label>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="hidden" asp-for="Input.LId" />
+                        <input disabled asp-for="Input.LeagueName" class="form-control" aria-required="true" placeholder="name@example.com" />
+                        <label asp-for="Input.LeagueName" class="ms-2 text-muted">Golf League</label>
+                        <span asp-validation-for="Input.LeagueName" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                        <label asp-for="Input.Password" class="form-label">Password</label>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="checkbox mb-3">
+                        <label asp-for="Input.RememberMe" class="form-label">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+                    <div>
+                        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    </div>
+                    <br />
+                    <div>
+                        <p>
+                            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                        </p>
+                        <p>
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                        </p>
+                        <p>
+                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                        </p>
+                    </div>
+                </form>
+        </div>
+        </div>
     </div>
 </div>
+    <!-- Modal -->
+    <div class="modal fade" id="leaguesModal" tabindex="-1" aria-labelledby="leaguesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="leaguesModalLabel">Select Golf League</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Please select a golf league:</p>
+                    <select id="leagueSelect" class="form-select">
+                        <!-- Leagues will be dynamically populated here -->
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="selectLeagueBtn">Select</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        'use strict';
+        $(document).ready(function () {
+            $('#Input_Email').blur(function () {
+                var userEmail = $('#Input_Email').val();
+                $.ajax({
+                    url: '/Identity/Account/Login?handler=GolfLeagues',
+                    method: 'GET',
+                    data: { userEmail: userEmail },
+                    success: function (data) {
+                        // If there are more than one leagues, show the modal
+                        if (data.length > 1) {
+                            $('#leaguesModal').modal('show');
+
+                            // Populate the select with retrieved golf leagues in the modal
+                            var $leagueSelect = $('#leagueSelect');
+                            $leagueSelect.empty();
+                            $.each(data, function (index, league) {
+                                $leagueSelect.append($('<option>', {
+                                    value: league.lId,
+                                    text: league.leagueName
+                                }));
+                            });
+                        } else if (data.length === 1) {
+                            // If only one league is associated, populate the league field directly
+                            $('#Input_LeagueName').val(data[0].leagueName);
+                            $('#Input_LId').val(data[0].lId);
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error loading golf leagues:', error);
+                    }
+                });
+            });
+
+            $(document).ready(function () {
+                // Event handler for the "Select" button
+                $('#selectLeagueBtn').click(function () {
+                    // Retrieve the selected league ID from the dropdown
+                    var selectedLeagueId = $('#leagueSelect').val();
+
+                    // Retrieve the selected league name from the dropdown
+                    var selectedLeagueName = $('#leagueSelect option:selected').text();
+
+                    // Set the selected league name & Id in the desired field
+                    $('#Input_LeagueName').val(selectedLeagueName);
+                    $('#Input_LId').val(selectedLeagueId);
+                    $('#SelectedLeagueName').val(selectedLeagueName);
+                    // Close the modal
+                    $('#leaguesModal').modal('hide');
+                });
+            });
+
+        });
+
+        $('#selectLeagueBtn').click(function () {
+            var selectedLeague = $('#leagueSelect').val();
+            $('#Input_LId').val(selectedLeague);
+            $('#leaguesModal').modal('hide');
+        });
+    </script>
+
 }

@@ -17,7 +17,7 @@ namespace DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -1347,40 +1347,6 @@ namespace DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("GolfGroup", b =>
-                {
-                    b.Property<int>("GGId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GGId"));
-
-                    b.Property<string>("GGName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeSpan>("GGTtime")
-                        .HasColumnType("time");
-
-                    b.Property<int>("GRId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GGId");
-
-                    b.HasIndex("GRId");
-
-                    b.ToTable("GolfGroups");
-
-                    b.HasData(
-                        new
-                        {
-                            GGId = 1,
-                            GGName = "Group 1",
-                            GGTtime = new TimeSpan(0, 6, 54, 0, 0),
-                            GRId = 1
-                        });
-                });
-
             modelBuilder.Entity("GolfPlayer", b =>
                 {
                     b.Property<int>("GPId")
@@ -1688,40 +1654,6 @@ namespace DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("GolfRound", b =>
-                {
-                    b.Property<int>("GRId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GRId"));
-
-                    b.Property<int>("GCId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("GRDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GRType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("GRId");
-
-                    b.HasIndex("GCId");
-
-                    b.ToTable("GolfRounds");
-
-                    b.HasData(
-                        new
-                        {
-                            GRId = 1,
-                            GCId = 1,
-                            GRDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            GRType = "TBGC Club, Stroke Play"
-                        });
-                });
-
             modelBuilder.Entity("Member", b =>
                 {
                     b.Property<int>("MemberId")
@@ -1748,6 +1680,9 @@ namespace DataAccess.Migrations
                     b.Property<int?>("Handicap")
                         .HasColumnType("int");
 
+                    b.Property<int>("LId")
+                        .HasColumnType("int");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1772,7 +1707,12 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Registered")
+                        .HasColumnType("bit");
+
                     b.HasKey("MemberId");
+
+                    b.HasIndex("LId");
 
                     b.ToTable("Members");
 
@@ -1783,14 +1723,16 @@ namespace DataAccess.Migrations
                             Email = "willffdunn@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "William",
-                            FullName = "WilliamDunn",
+                            FullName = "William Dunn",
                             Handicap = 9,
+                            LId = 1,
                             LastName = "Dunn",
                             MemberStatus = "Active",
                             MemberTee = "White",
                             MemberType = "TBRes",
                             PhoneNumber = "484-885-7000",
-                            PreferredNotification = "Both"
+                            PreferredNotification = "Both",
+                            Registered = false
                         },
                         new
                         {
@@ -1798,14 +1740,16 @@ namespace DataAccess.Migrations
                             Email = "karenfdunn@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Karen",
-                            FullName = "KarenDunn",
+                            FullName = "Karen Dunn",
                             Handicap = 19,
+                            LId = 1,
                             LastName = "Dunn",
                             MemberStatus = "Active",
                             MemberTee = "Red",
                             MemberType = "TBRes",
                             PhoneNumber = "610-733-38380",
-                            PreferredNotification = "Both"
+                            PreferredNotification = "Both",
+                            Registered = false
                         });
                 });
 
@@ -1875,7 +1819,8 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -2015,6 +1960,64 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Models.ViewModels.EventParticipant", b =>
+                {
+                    b.Property<int>("EPId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EPId"));
+
+                    b.Property<string>("EPEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EPFName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EPLName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EPPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EPType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EvId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EPId");
+
+                    b.HasIndex("EvId");
+
+                    b.ToTable("EvParticipants");
+
+                    b.HasData(
+                        new
+                        {
+                            EPId = 1,
+                            EPEmail = "willffdunn@tropicbaygolf.com",
+                            EPFName = "Bill",
+                            EPLName = "Dunn",
+                            EPPhoneNumber = "(999)999-9999",
+                            EPType = "Sponsor",
+                            EvId = 1,
+                            LId = 0,
+                            MemberId = 1
+                        });
+                });
+
             modelBuilder.Entity("TBGC.Models.Event", b =>
                 {
                     b.Property<int>("EvId")
@@ -2023,6 +2026,22 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EvId"));
 
+                    b.Property<string>("EvContactEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EvContactFName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EvContactLName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EvContactPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("EvDate")
                         .HasColumnType("datetime2");
 
@@ -2030,15 +2049,57 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("EvEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("EvEndTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("EvFeeAmount")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EvLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EvRegComment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EvRegEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("EvRegEndTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("EvRegMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EvRegStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("EvRegStartTime")
+                        .HasColumnType("time");
+
                     b.Property<string>("EvShortDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("EvTime")
+                        .HasColumnType("time");
 
                     b.Property<string>("EvType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("LId")
+                        .HasColumnType("int");
+
                     b.HasKey("EvId");
+
+                    b.HasIndex("LId");
 
                     b.ToTable("Events");
 
@@ -2046,10 +2107,188 @@ namespace DataAccess.Migrations
                         new
                         {
                             EvId = 1,
-                            EvDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EvContactEmail = "willffdunn@tropicbaygolf.com",
+                            EvContactFName = "Bill",
+                            EvContactLName = "Dunn",
+                            EvContactPhoneNumber = "(999)999-9999",
+                            EvDate = new DateTime(2023, 12, 3, 8, 0, 0, 0, DateTimeKind.Unspecified),
                             EvDescription = "First Event",
-                            EvShortDescription = "Event Title",
-                            EvType = "Golf Round"
+                            EvEndDate = new DateTime(2023, 12, 5, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            EvEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            EvFeeAmount = "75.00",
+                            EvLocation = "TB Club House",
+                            EvRegComment = "Fee is per person and can be paid by check to TB Golf Club",
+                            EvRegEndDate = new DateTime(2023, 12, 1, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            EvRegEndTime = new TimeSpan(0, 12, 0, 0, 0),
+                            EvRegMethod = "Online",
+                            EvRegStartDate = new DateTime(2023, 12, 1, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            EvRegStartTime = new TimeSpan(0, 8, 0, 0, 0),
+                            EvShortDescription = "First Event",
+                            EvTime = new TimeSpan(0, 8, 0, 0, 0),
+                            EvType = "Golf Round",
+                            LId = 1
+                        });
+                });
+
+            modelBuilder.Entity("TBGC.Models.GolfGroup", b =>
+                {
+                    b.Property<int>("GGId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GGId"));
+
+                    b.Property<string>("GGName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("GGTtime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("GRId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GGId");
+
+                    b.HasIndex("GRId");
+
+                    b.ToTable("GolfGroups");
+
+                    b.HasData(
+                        new
+                        {
+                            GGId = 1,
+                            GGName = "Group 1",
+                            GGTtime = new TimeSpan(0, 6, 54, 0, 0),
+                            GRId = 1
+                        });
+                });
+
+            modelBuilder.Entity("TBGC.Models.GolfRound", b =>
+                {
+                    b.Property<int>("GRId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GRId"));
+
+                    b.Property<int>("GCId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("GRDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GRType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GRId");
+
+                    b.HasIndex("GCId");
+
+                    b.HasIndex("LId");
+
+                    b.ToTable("GolfRounds");
+
+                    b.HasData(
+                        new
+                        {
+                            GRId = 1,
+                            GCId = 1,
+                            GRDate = new DateTime(2023, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            GRType = "TBGC Club, Stroke Play",
+                            LId = 1
+                        });
+                });
+
+            modelBuilder.Entity("TBGC.Models.League", b =>
+                {
+                    b.Property<int>("LId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LId"));
+
+                    b.Property<string>("ConfirmPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LCity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LContactEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LContactFName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LContactLName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LContactPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LSeasonEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LSeasonStart")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LStreet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LZip")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LeagueName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("LId");
+
+                    b.ToTable("Leagues");
+
+                    b.HasData(
+                        new
+                        {
+                            LId = 1,
+                            ConfirmPassword = "Kahida01!",
+                            LCity = "Delray Beach",
+                            LContactEmail = "willffdunn@gmail.com",
+                            LContactFName = "Bill",
+                            LContactLName = "Dunn",
+                            LContactPhoneNumber = "484.885.7000",
+                            LDescription = "The Tropic Bay Golf League is a a golf league comprised primarily of golf enthusuiasts of all skill ranges primarily from the TRpoic Bay Condominium community",
+                            LSeasonEnd = new DateTime(2024, 4, 15, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            LSeasonStart = new DateTime(2023, 11, 1, 8, 0, 0, 0, DateTimeKind.Unspecified),
+                            LState = "Fl",
+                            LStreet = "2801 Florida Blvd",
+                            LZip = "33483",
+                            LeagueName = "Tropic Bay Golf",
+                            Password = "Kahida01!"
                         });
                 });
 
@@ -2058,6 +2297,14 @@ namespace DataAccess.Migrations
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -2070,7 +2317,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StreetAddress")
+                    b.Property<string>("Street")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
@@ -2087,20 +2334,9 @@ namespace DataAccess.Migrations
                     b.Navigation("GolfCourse");
                 });
 
-            modelBuilder.Entity("GolfGroup", b =>
-                {
-                    b.HasOne("GolfRound", "GolfRound")
-                        .WithMany()
-                        .HasForeignKey("GRId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GolfRound");
-                });
-
             modelBuilder.Entity("GolfPlayer", b =>
                 {
-                    b.HasOne("GolfGroup", "GolfGroup")
+                    b.HasOne("TBGC.Models.GolfGroup", "GolfGroup")
                         .WithMany()
                         .HasForeignKey("GGId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2109,7 +2345,7 @@ namespace DataAccess.Migrations
                     b.HasOne("Member", "Member")
                         .WithMany()
                         .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("GolfGroup");
@@ -2128,15 +2364,15 @@ namespace DataAccess.Migrations
                     b.Navigation("GolfCourseHole");
                 });
 
-            modelBuilder.Entity("GolfRound", b =>
+            modelBuilder.Entity("Member", b =>
                 {
-                    b.HasOne("GolfCourse", "GolfCourse")
+                    b.HasOne("TBGC.Models.League", "League")
                         .WithMany()
-                        .HasForeignKey("GCId")
+                        .HasForeignKey("LId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("GolfCourse");
+                    b.Navigation("League");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -2188,6 +2424,58 @@ namespace DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Models.ViewModels.EventParticipant", b =>
+                {
+                    b.HasOne("TBGC.Models.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EvId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("TBGC.Models.Event", b =>
+                {
+                    b.HasOne("TBGC.Models.League", "League")
+                        .WithMany()
+                        .HasForeignKey("LId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("League");
+                });
+
+            modelBuilder.Entity("TBGC.Models.GolfGroup", b =>
+                {
+                    b.HasOne("TBGC.Models.GolfRound", "GolfRound")
+                        .WithMany()
+                        .HasForeignKey("GRId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GolfRound");
+                });
+
+            modelBuilder.Entity("TBGC.Models.GolfRound", b =>
+                {
+                    b.HasOne("GolfCourse", "GolfCourse")
+                        .WithMany()
+                        .HasForeignKey("GCId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TBGC.Models.League", "League")
+                        .WithMany()
+                        .HasForeignKey("LId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GolfCourse");
+
+                    b.Navigation("League");
                 });
 #pragma warning restore 612, 618
         }

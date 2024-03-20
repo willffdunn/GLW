@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Identity;
 using Models;
 using System.IO;
 using System.Reflection.Metadata;
+using Models.ViewModels;
+using OfficeOpenXml.Export.HtmlExport;
 
 namespace TBGC.DataAccess.Data
 {
@@ -34,12 +36,15 @@ namespace TBGC.DataAccess.Data
         public DbSet<GolfPlayer> GolfPlayers { get; set; }
         public DbSet<GolfPlayerScore> GolfPlayerScores { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<EventParticipant> EvParticipants { get; set; }
+        public DbSet<League> Leagues { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Member>().HasData(
             new Member
-            { MemberId = 1, Email = "willffdunn@gmail.com", FirstName = "William",
+            { MemberId = 1,LId=1, Email = "willffdunn@gmail.com", FirstName = "William",
                 LastName = "Dunn", MemberStatus = "Active", 
                 EmailConfirmed = false, MemberType = "TBRes", Handicap = 9,
                 PhoneNumber = "484-885-7000",
@@ -47,7 +52,9 @@ namespace TBGC.DataAccess.Data
                 PreferredNotification = "Both",
             },
             new Member
-            { MemberId = 2, Email = "karenfdunn@gmail.com", FirstName = "Karen",
+            { MemberId = 2,
+                LId = 1,
+                Email = "karenfdunn@gmail.com", FirstName = "Karen",
                 LastName = "Dunn", MemberStatus = "Active", 
                 EmailConfirmed = false, MemberType = "TBRes", Handicap = 19,
                 PhoneNumber = "610-733-38380",
@@ -58,11 +65,31 @@ namespace TBGC.DataAccess.Data
             new GolfRound
             {
                 GRId = 1,
+                LId = 1,
                 GCId =1,
                 GRDate = DateTime.Parse("2023-07-01 00:00:00"),
                 GRType = "TBGC Club, Stroke Play"
 
              });
+            modelBuilder.Entity<League>().HasData(
+            new League
+            {
+                LId = 1,
+                LeagueName= "Tropic Bay Golf",
+                LStreet = "2801 Florida Blvd",
+                LCity = "Delray Beach",
+                LState = "Fl",
+                LZip ="33483",
+                LContactFName = "Bill",
+                LContactLName = "Dunn",
+                LContactEmail = "willffdunn@gmail.com",
+                LContactPhoneNumber = "484.885.7000",
+                LSeasonStart = DateTime.Parse("2023-11-01 08:00:00"),
+                LSeasonEnd = DateTime.Parse("2024-04-15 12:00:00"),
+                LDescription = "The Tropic Bay Golf League is a a golf league comprised primarily of golf enthusuiasts of all skill ranges primarily from the TRpoic Bay Condominium community", 
+                Password = "Kahida01!",
+                ConfirmPassword = "Kahida01!"
+            });
             modelBuilder.Entity<GolfGroup>().HasData(
             new GolfGroup
             {
@@ -75,9 +102,9 @@ namespace TBGC.DataAccess.Data
             modelBuilder.Entity<GolfPlayer>().HasData(
             new GolfPlayer
             {
+                MemberId = 1,
                 GGId = 1,
                 GPId = 1,
-                MemberId = 1,
                 Tot1 = 0,
                 Tot2 = 0,
                 Tot3 = 0,
@@ -281,14 +308,42 @@ namespace TBGC.DataAccess.Data
             new Event
             {
                 EvId = 1,
-                EvShortDescription = "Event Title",
+                LId = 1,
+                EvShortDescription = "First Event",
                 EvDescription = "First Event",
                 EvType = "Golf Round",
-                EvDate = DateTime.Parse("2023-07-01 00:00:00")
+                EvDate = DateTime.Parse("2023-12-03 08:00:00"),
+                EvEndDate = DateTime.Parse("2023-12-05 12:00:00"),
+                EvTime = TimeSpan.Parse("08:00:00"),
+                EvEndTime = TimeSpan.Parse("12:00"),
+                EvRegStartTime = TimeSpan.Parse("08:00:00"),
+                EvRegEndTime = TimeSpan.Parse("12:00"),
+                EvContactFName = "Bill",
+                EvContactLName = "Dunn",
+                EvLocation = "TB Club House",
+                EvContactEmail = "willffdunn@tropicbaygolf.com",
+                EvContactPhoneNumber ="(999)999-9999",
+                EvRegStartDate = DateTime.Parse("2023-12-01 08:00:00"),
+                EvRegEndDate = DateTime.Parse("2023-12-01 08:00:00"),
+                EvRegMethod = "Online",
+                EvRegComment = "Fee is per person and can be paid by check to TB Golf Club",
+                EvFeeAmount = "75.00"
+               
+            });
+            modelBuilder.Entity<EventParticipant>().HasData(
+            new EventParticipant
+            {
+                EPId = 1,
+                EvId = 1,
+                EPType = "Sponsor",
+                EPFName  = "Bill",
+                EPLName = "Dunn",
+                MemberId = 1,
+                EPEmail = "willffdunn@tropicbaygolf.com",
+                EPPhoneNumber = "(999)999-9999"
+            });
 
-             });
-
-        modelBuilder.Entity<GolfCourse>().HasData(
+            modelBuilder.Entity<GolfCourse>().HasData(
             new GolfCourse
             {
                 GCId = 1,

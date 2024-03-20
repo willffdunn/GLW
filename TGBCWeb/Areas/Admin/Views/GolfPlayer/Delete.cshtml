@@ -1,10 +1,9 @@
-﻿@model GolfPlayer
+﻿@using TBGC.Models
+@model GolfPlayer
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<partial name="pvNotification" />
-
 <div class="container-fluid" style="margin-top: -50px; text-align: center">
-    <form method="post">
+    <form id="deleteForm" method="post" action="@Url.Action("Delete", "GolfPlayer")">
         <div class="pt-4 mt-3">
             <div asp-validation-summary="All">
                 <div class="row pb-2" >
@@ -13,6 +12,9 @@
                     <hr />
                         <ul style="list-style-type:none;">
                            <li>
+                                <input type="hidden" asp-for="@Model.GPId" id="GPId" value="@Model.GPId" />
+                                <input type="hidden" asp-for="@Model.GGId" id="GPId" value="@Model.GGId" />
+
                                 <input disabled asp-for="@Model.Member.FullName" class="field-divided">
                                 <input disabled asp-for="GPType">
                             </li>
@@ -31,8 +33,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-6" style="text-align:center">
-                <button type="submit" class="btn btn-primary form-control">Delete Player</button>
+            <div class="col-6" style="text-align: center">
+                <button type="button" class="btn btn-primary form-control" onclick="confirmDelete()">
+                    <i class="bi bi-trash-fill"></i> Delete
+                </button>
             </div>
             <div class="col-6" style="text-align:center">
                 <a asp-controller="GolfPlayer" asp-action="Index" asp-route-GGId=@ViewBag.GGId
@@ -42,8 +46,13 @@
         </div>
      </form>
   </div>
+
+
+
 @section Scripts {
     @{
         <partial name="_ValidationScriptsPartial" />
     }
 }
+
+

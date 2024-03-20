@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.VisualBasic;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Models;
+using TBGC.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class GolfPlayer
 { 
@@ -26,6 +25,7 @@ public class GolfPlayer
     [Required]
     [ForeignKey("MemberId")]
     [ValidateNever]
+    [DeleteBehavior(DeleteBehavior.Restrict)]
     public Member Member { get; set; }
     public int Tot1 { get; set; }
     public int Tot2 { get; set; }
@@ -39,4 +39,5 @@ public class GolfPlayer
     public int FTot1 { get; set; }
     public int FTot2 { get; set; }
     public int FTot3 { get; set; }
+
 }

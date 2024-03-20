@@ -2,31 +2,38 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+using Models;
+using TBGC.Models;
+using TBGC.Utility;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TBGCWeb.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+
+        public LoginModel(SignInManager<ApplicationUser> signInManager, 
+            ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager,
+            IUnitOfWork unitOfWork)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -67,12 +74,8 @@ namespace TBGCWeb.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
-
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
+            [ValidateNever]
+            public string UserName { get; set; }            
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -82,10 +85,17 @@ namespace TBGCWeb.Areas.Identity.Pages.Account
             /// </summary>
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
+            public int? LId { get; set; }
+            public string? LeagueName { get; set; }
+
+            [ValidateNever]
+            public IEnumerable<SelectListItem> LeagueList { get; set; }
+
         }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
@@ -106,15 +116,35 @@ namespace TBGCWeb.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
+            
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                Input.UserName = Input.Email;
+                var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var currentUser = await _userManager.FindByNameAsync(Input.Email);
+                ApplicationUser au = (ApplicationUser)currentUser;
+
                 if (result.Succeeded)
                 {
+                    League league = _unitOfWork.League.Get(u => u.LId == Input.LId);    
+                    if (league != null)
+                    {
+                        SD.LeagueName = league.LeagueName;
+                    }
+                    else
+                    {
+                        SD.LeagueName = "Sample League";
+                    }
+
+                    SD.LeagueId = Convert.ToInt32(Input.LId);
+                    SD.UserFirstName = au.FirstName;
+                    SD.UserLastName = au.LastName;
+                    SD.Email = au.Email;
+
                     _logger.LogInformation("User logged in.");
+                    TempData["Success"] = "User logged in successfully";
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -122,19 +152,50 @@ namespace TBGCWeb.Areas.Identity.Pages.Account
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
                 if (result.IsLockedOut)
+
                 {
+                    TempData["Info"] = "User account locked out.";
                     _logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
+                    if (au == null & Input.LId != null)
+                    {
+                        TempData["Info"] = "Member is not registered with league";
+                        return RedirectToPage("./Register");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        return Page();
+                    }
                 }
             }
 
             // If we got this far, something failed, redisplay form
             return Page();
         }
+        public IActionResult OnGetGolfLeagues(string userEmail)
+        {
+            List<League> lList = _unitOfWork.League.GetAll().ToList();
+            List<Member> mList = _unitOfWork.Member.GetAll(includeProperties: "League").OrderBy(p => p.Email).ToList();
+            List<LeagueListVM> leagueListVMs = new List<LeagueListVM>();
+            if (mList != null)
+            {
+                List<Member> memberLeague = mList.Where(u => u.Email == userEmail).ToList();
+                foreach (Member lM in memberLeague)
+                {
+                    LeagueListVM leagueListVM = new LeagueListVM();
+                    League league = lList.Where(u => u.LId == lM.LId).FirstOrDefault();
+                    leagueListVM.LId = lM.LId;
+                    leagueListVM.LeagueName = league.LeagueName;
+                    leagueListVMs.Add(leagueListVM);
+                }
+                return new JsonResult(leagueListVMs);
+            }
+            return new JsonResult(leagueListVMs);
+        }
+
     }
 }

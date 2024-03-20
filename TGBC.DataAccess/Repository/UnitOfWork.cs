@@ -22,8 +22,9 @@ namespace DataAccess.Repository
         public IGolfPlayerRepository GolfPlayer { get; private set; }
         public IGolfRoundRepository GolfRound { get; private set; }
         public IEventRepository Event { get; private set; }
+        public ILeagueRepository League { get; private set; }
         public IGolfPlayerScoreRepository GolfPlayerScore { get; private set; }
-      
+        public IEventParticipantRepository EventParticipant { get; private set; }
 
 
 
@@ -35,14 +36,19 @@ namespace DataAccess.Repository
             GolfCourseHole = new GolfCourseHoleRepository(_db);
             GolfGroup = new GolfGroupRepository(_db);
             Event = new EventRepository(_db);
+            EventParticipant = new EventParticipantRepository(_db);
             GolfRound = new GolfRoundRepository(_db);
+            League = new LeagueRepository(_db); 
             GolfPlayerScore = new GolfPlayerScoreRepository(_db);
             GolfPlayer = new GolfPlayerRepository(_db);
           
 
 
         }
-
+        public void ClearChangeTracker()
+        {
+            _db.ChangeTracker.Clear();
+        }
 
         public void Save()
         {

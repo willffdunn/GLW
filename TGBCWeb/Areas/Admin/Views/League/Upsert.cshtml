@@ -1,0 +1,156 @@
+﻿@using Models
+@model League
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<style>
+    input {
+        text-align: center;
+        font-weight: 800;
+        color: #325d88;
+    }
+
+    select {
+        font-weight: 500;
+        color: #325d88;
+    }
+
+    Label {
+        font-weight: 800;
+        color: black;
+    }
+
+</style>
+<form method="post">
+  <div asp-validation-summary="All">
+
+    <div style="margin-top: -45px">
+        <div class="pt-4 mt-3" style="text-align: center; font-weight: 500">
+            <div class="row pb-2">
+                <h3 class="text-primary" style="text-align:center">@(Model.LId != 0 ? "Update" : "Create a") League</h3> 
+                <hr />
+                <div style="font-weight: 500; font-size: smaller">
+                    <ul style="list-style-type:none">
+                        <li>
+                            <input type="hidden" asp-for="@Model.LId" />
+                            <Label>League</Label>
+
+                            <input   asp-for="@Model.LeagueName" placeholder="League Name" style="width:150px; text-align:center" />
+                        </li>
+                        <br />
+                        <li>
+                            <Label>Location</Label>
+                            <input   asp-for="@Model.LStreet" placeholder="Street" style="width:120px; text-align:center" />
+                            <input   asp-for="@Model.LCity" placeholder="City" style="width:120px; text-align:center" />
+                            <input   asp-for="@Model.LState" placeholder="State" style="width:50px; text-align:center" />
+                            <input   asp-for="@Model.LZip" placeholder="Postal Code" style="width:50px; text-align:center" />
+                            <span asp-validation-for="@Model.LZip" class="text-danger"></span>
+                            </li>
+                        <br />
+                        <li>
+                            <Label>Contact</Label>
+                            <input   asp-for="@Model.LContactFName" class="field-divided"
+                                   placeholder="League Admin First Name" size="18" />
+                            &nbsp
+                            <input   asp-for="@Model.LContactLName" class="field-divided"
+                                   placeholder="League Admin Last Name" size="18" />
+                            &nbsp
+                            <input   asp-for="@Model.LContactEmail" class="field-divided"
+                                   placeholder="League Admin Email" size="18" />
+                                <span asp-validation-for="@Model.LContactEmail" class="text-danger"></span>
+
+                            &nbsp
+                            <input   asp-for="@Model.LContactPhoneNumber" class="field-divided"
+                                   placeholder="League Admin Phone Number" size="18" />
+                                <span asp-validation-for="@Model.LContactPhoneNumber" class="text-danger"></span>
+
+                        </li>
+                        <br />
+                        <li>
+                            <Label>  Season Start</Label>
+                            <input type="Date"   asp-for="@Model.LSeasonStart" class="field-divided" placeholder="Event Date" size="10" />
+                            <Label>  Season End</Label>
+                            <input type="Date"   asp-for="@Model.LSeasonEnd" class="field-divided" placeholder="Event Date" size="10" />
+                        </li>
+                            <div class="form-floating mb-3 col-md-6">
+                                <input asp-for="@Model.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                                <label asp-for="@Model.Password" class="ms-2 text-muted">Password</label>
+                                <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3 col-md-6">
+                                <input asp-for="@Model.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                                <label asp-for="@Model.ConfirmPassword" class="ms-2 text-muted">Confirm Password</label>
+                                <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        <br />
+                            <li>
+                                <textarea id="summernote" name="LDescription" style="text-align:center"
+                                          asp-for="@Model.LDescription" placeholder="League Description"></textarea>
+                                <span asp-validation-for="@Model.LDescription" class="text-danger"></span>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6" style="text-align:center">
+            <button type="submit" class="btn btn-primary form-control">Save Changes</button>
+        </div>
+        <div class="col-6">
+            <a asp asp-controller="League" asp-action="Browse" asp-route-LId="@Model.LId"
+               class="btn btn-secondary form-control">
+                Cancel
+            </a>
+        </div>
+     </div>
+   </div>
+ </form>
+
+@section Scripts {
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Create Event',
+            height: 150,
+            minHeight: null,
+            maxHeight: null,
+            focus: true,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['picture', 'link', 'video']],
+                ['table', ['table']],
+                ['view', ['fullscreen', 'codeview']],
+            ]
+        });
+
+        let buttons = $('.note-editor button[data-toggle="dropdown"]');
+
+        buttons.each((key, value) => {
+            $(value).on('click', function (e) {
+                $(this).attr('data-bs-toggle', 'dropdown')
+                console.log()
+                ata('id', 'dropdownMenu');
+            })
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+

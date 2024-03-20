@@ -10,7 +10,8 @@
     },
     "mssql1": {
       "type": "mssql",
-      "connectionId": "TBGCDBConnection"
+      "connectionId": "TBGCDBConnection",
+      "dynamicId": null
     }
   }
 }

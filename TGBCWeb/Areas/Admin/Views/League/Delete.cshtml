@@ -1,0 +1,96 @@
+﻿@using Models
+@model League
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<style>
+    input {
+        text-align: center;
+        font-weight: 800;
+        color: #325d88;
+    }
+
+    select {
+        font-weight: 500;
+        color: #325d88;
+    }
+
+    Label {
+        font-weight: 800;
+        color: black;
+    }
+
+</style>
+ <form id="deleteForm" method="post" action="@Url.Action("Delete", "League")">
+<div style="margin-top: -45px">
+    <div class="pt-4 mt-3" style="text-align: center; font-weight: 500">
+        <div class="row pb-2">
+            <h3 class="text-primary" style="text-align:center"> Delete League</h3>
+            <hr />
+            <div style="font-weight: 500; font-size: smaller">
+                <ul style="list-style-type:none">
+                    <li>
+                        <input type="hidden" asp-for="@Model.LId" />
+                        <Label>League</Label>
+
+                        <input disabled asp-for="@Model.LeagueName" placeholder="League Name" style="width:150px; text-align:center" />
+                    </li>
+                    <br />
+                    <li>
+                        <Label>Location</Label>
+                        <input disabled asp-for="@Model.LStreet" placeholder="Street" style="width:120px; text-align:center" />
+                        <input disabled asp-for="@Model.LCity" placeholder="Street" style="width:120px; text-align:center" />
+                        <input disabled asp-for="@Model.LState" placeholder="Street" style="width:50px; text-align:center" />
+                        <input disabled asp-for="@Model.LZip" placeholder="Street" style="width:50px; text-align:center" />
+                    </li>
+                    <br />
+                    <li>
+                        <Label>Contact</Label>
+                        <input disabled asp-for="@Model.LContactFName" class="field-divided"
+                               placeholder="Contact First Name" size="18" />
+                        &nbsp
+                        <input disabled asp-for="@Model.LContactLName" class="field-divided"
+                               placeholder="Contact Last Name" size="18" />
+                        &nbsp
+                        <input disabled asp-for="@Model.LContactEmail" class="field-divided"
+                               placeholder="Contact Email" size="18" />
+                        &nbsp
+                        <input disabled asp-for="@Model.LContactPhoneNumber" class="field-divided"
+                               placeholder="Contact Phone Number" size="18" />
+                    </li>
+                    <br />
+                    <li>
+                        <Label>  Season Start</Label>
+                        <input type="Date" disabled asp-for="@Model.LSeasonStart" class="field-divided" placeholder="Event Date" size="10" />
+                        <Label>  Season End</Label>
+                        <input type="Date" disabled asp-for="@Model.LSeasonEnd" class="field-divided" placeholder="Event Date" size="10" />
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+ </form> 
+<div class="row">
+    <div class="col-6" style="text-align:center">
+        <button type="button" class="btn btn-primary form-control" onclick="confirmDelete()">
+            <i class="bi bi-trash-fill"></i> Delete
+        </button>
+    </div>
+    <div class="col-6">
+        <a asp asp-controller="League" asp-action="Browse" asp-route-LId="@Model.LId"
+           class="btn btn-secondary form-control">
+            Cancel
+        </a>
+    </div>
+</div>
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,137 @@
+﻿@using Models
+@model League
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+    <style>
+        input {
+            text-align: center;
+            font-weight: 800;
+            color: #325d88;
+        }
+
+        select {
+            font-weight: 500;
+            color: #325d88;
+        }
+
+    </style>
+  <div style="margin-top: -45px">
+    <div class="pt-4 mt-3" style="text-align: center; font-weight: 500">
+       <div class="row pb-2">
+                    <h3 class="text-primary" style="text-align:center"> League Info</h3>
+            <hr />
+          <div style="font-weight: 500; font-size: smaller">
+            <ul style="list-style-type:none">
+                <li>
+                    <input type="hidden" asp-for="@Model.LId" />
+                    <Label>League</Label>
+
+                    <input disabled asp-for="@Model.LeagueName" placeholder="League Name" style="width:150px; text-align:center" />
+                </li>
+                <br />
+                <li>
+                    <Label>Location</Label>
+                    <input disabled asp-for="@Model.LStreet" placeholder="Street" style="width:120px; text-align:center" />
+                    <input disabled asp-for="@Model.LCity" placeholder="Street" style="width:120px; text-align:center" />
+                    <input disabled asp-for="@Model.LState" placeholder="Street" style="width:50px; text-align:center" />
+                    <input disabled asp-for="@Model.LZip" placeholder="Street" style="width:50px; text-align:center" />
+                </li>
+                <br />
+                <li>
+                    <Label>Contact</Label>
+                    <input disabled asp-for="@Model.LContactFName" class="field-divided"
+                            placeholder="Contact First Name" size="18" />
+                    &nbsp
+                    <input disabled asp-for="@Model.LContactLName" class="field-divided"
+                            placeholder="Contact Last Name" size="18" />
+                    &nbsp
+                    <input disabled asp-for="@Model.LContactEmail" class="field-divided"
+                            placeholder="Contact Email" size="18" />
+                    &nbsp
+                    <input disabled asp-for="@Model.LContactPhoneNumber" class="field-divided"
+                            placeholder="Contact Phone Number" size="18" />
+                </li>
+                <br />
+                <li>
+                    <Label>  Season Start</Label>
+                    <input type="Date" disabled asp-for="@Model.LSeasonStart" class="field-divided" placeholder="Event Date" size="10" />
+                    <Label>  Season End</Label>
+                    <input type="Date" disabled asp-for="@Model.LSeasonEnd" class="field-divided" placeholder="Event Date" size="10" />
+                </li>
+                <br />
+                <li>
+                    <textarea id="summernote" name="LDescription" style="text-align:center"
+                                disabled asp-for="@Model.LDescription" placeholder="Event Description"></textarea>
+            </li>
+            </ul>
+        </div>
+                </div>
+            </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+        <a asp asp-controller="League" asp-action="Upsert" asp-route-LId="@Model.LId" class="btn btn-primary form-control">
+                Edit League
+            </a>
+        </div>
+    <div class="col-4">
+        <a asp asp-controller="League" asp-action="LeagueOptions" asp-route-EvId="@Model.LId"
+           class="btn btn-primary form-control">
+            League Customization
+        </a>
+    </div>
+        <div class="col-4">
+            <a asp asp-controller="League" asp-action="LeagueEmail" asp-route-EvId="@Model.LId"
+                class="btn btn-primary form-control">
+                Email League Info
+            </a>
+        </div>
+     </div>
+
+@section Scripts {
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Create Event',
+            height: 150,
+            minHeight: null,
+            maxHeight: null,
+            focus: true,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['picture', 'link', 'video']],
+                ['table', ['table']],
+                ['view', ['fullscreen', 'codeview']],
+            ]
+        });
+
+        let buttons = $('.note-editor button[data-toggle="dropdown"]');
+
+        buttons.each((key, value) => {
+            $(value).on('click', function (e) {
+                $(this).attr('data-bs-toggle', 'dropdown')
+                console.log()
+                ata('id', 'dropdownMenu');
+            })
+        });
+
+        $('#summernote').summernote('disable');
+
+    </script>
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+
+
+
+
+
+
+

@@ -2,7 +2,7 @@
 @model Member
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<form method="post">
+<form id="deleteForm" method="post" action="@Url.Action("Delete", "Member")">
     <div class="pt-4 mt-3">
         <div asp-validation-summary="All">
             <div class="row pb-2" style="text-align: center; margin-top: -45px">
@@ -11,6 +11,7 @@
                 <ul style="list-style-type:none;">
 
                     <li>
+                        <input hidden asp-for=MemberId />
                         <input asp-for="FirstName" disabled class="field-divided" placeholder="First Name" />
                         <span asp-validation-for="FirstName" class="text-danger"></span>
                         <input asp-for="LastName" disabled placeholder="Last Name " />
@@ -79,7 +80,9 @@
     </div>
     <div class="row">
         <div class="col-6">
-            <button type="submit" class="btn btn-primary form-control">Create</button>
+            <button type="button" class="btn btn-primary form-control" onclick="confirmDelete()">
+                <i class="bi bi-trash-fill"></i> Delete
+            </button>
         </div>
         <div class="col-6">
             <a asp asp-controller="Member" asp-action="Index" class="btn btn-secondary form-control">

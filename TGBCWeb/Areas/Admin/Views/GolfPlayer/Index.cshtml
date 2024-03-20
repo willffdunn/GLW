@@ -1,7 +1,6 @@
 ﻿@using Models;
 @model List<GolfPlayer>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<partial name="pvNotification" />
 
 <div class-"container" style="width:100%">
     <div class="row pt-2 pb-1">
@@ -22,7 +21,7 @@
     </div>
 
       <div style="text-align:center">
-        <table class="table table-bordered table-striped ">
+        <table id ="gPTable"class="table table-bordered table-striped ">
             <thead>
                 <tr>
                     <th>
@@ -102,6 +101,11 @@
       </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#gPTable').DataTable();
+    });
+</script>
 
 
 @section Scripts {

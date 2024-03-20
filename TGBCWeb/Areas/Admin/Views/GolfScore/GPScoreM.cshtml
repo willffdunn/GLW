@@ -1,7 +1,7 @@
 ﻿@using Models
 @model GolfPlayerScore
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<partial name="pvNotification" />
+
  <div class="container"  style="margin-top:-50px">
     <form method="post" class="row gy-2 gx-3 align-items-center">
         <div class="row pt-2 pb-1">
@@ -17,37 +17,39 @@
                     }
                     select {
                         border-style: solid;
-                        width: 150px;
-                        text-align: left;
+                        width: 300px;
+                        text-align: center;
                         font-size:x-large;
-                        color: rgb(47,164,231);
+                        font-weight: bold;
+                        color: black;
+                       
                     }
                     select option {
                         border-style:solid;
-                        width: 150px;
-                        text-align: left;
+                        width: 300px;
+                        text-align: center;
                         font-size: x-large;
-                        color: rgb(47,164,231);
+                       
+                       
                     }
 
                     table, th, td {
                         border: 0px;
-                        text-align: left;
+                        text-align: center;
                     }
 
                     td {
-                        height: 40px; width:200px;
+                        height: 40px; width:150px;
                         font-weight: bold;
-                        color: rgb(47,164,231);
+                        text-align: center;
+                        font-size: x-large;
                     }
 
                     tr {
                         background-color: white;
-                        color: rgb(47,164,231);
                         font-size: 1.15em;
                         font-weight: bold;
-                        margin-left: 50px;
-                        font-family:sans-serif;
+                        
                     }
                  </style>
           <div class="container d-flex justify-content-center" >
@@ -58,11 +60,12 @@
                         Hole 
                     </td>
                         <td  >
-                        <input disabled asp-for="@Model.GHId" value="@Model.GHId" style="height: 60px; width:150px; font-size:x-large;
-                            font-weight: bold; text-align:left; color: black; background-color:white" />
+                        <input disabled asp-for="@Model.GHId" value="@Model.GHId" style="height: 60px; width:100px;
+                            / />
                         <input type="hidden" asp-for=@Model.GHId />
                         <input type="hidden" asp-for=@Model.GPSId />
                         <input type="hidden" asp-for=@Model.GPId />
+
                     </td>
                     </tr>
                     <tr > 
@@ -86,6 +89,7 @@
                         </td>
                     </tr>
                     <br/>
+                    <br />
                     <tr>
                         <td >
                             Putts
@@ -103,6 +107,7 @@
                         </td>
                     </tr>
                     <br/>
+                    <br />
                     <tr>
                         <td >
                                 GIR
@@ -116,6 +121,7 @@
                         </td>
                     </tr>
                     <br/>
+                    <br />
                     <tr >
                         <td >
                             Drive
@@ -132,6 +138,11 @@
                             </select>
                         </td>
                     </tr>
+                    <br />
+                    <br />
+                    <tr>
+                        <td>Total</td>
+                        <td>@ViewBag.Tot</td>
                  </tbody>
               </table>
             </div>

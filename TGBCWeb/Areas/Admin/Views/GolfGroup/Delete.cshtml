@@ -1,10 +1,8 @@
 ﻿@model GolfGroup
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<partial name="pvNotification" />
-
 <div class="container-fluid" style="margin-top: -50px">
-    <form method="post">
+    <form id="deleteForm" method="post" action="@Url.Action("Delete", "GolfGroup")">
         <div class="pt-4 mt-3">
             <div asp-validation-summary="All">
                 <div class="row pb-2">
@@ -16,8 +14,9 @@
                     <div class="col-12" >
                         <ul style="list-style-type:none; text-align:center">
                             <li>
-                                <input disabled asp-for="GGName" class="form-divided" style="width: 250px">
-                                <input disabled asp-for="GGTtime" class="form-divided">
+                                <input hidden asp-for="@Model.GGId" />
+                                <input disabled asp-for="GGName" class="form-divided" style="width: 250px"/>
+                                <input disabled asp-for="GGTtime" class="form-divided" />
                             </li>
                         </ul>
                     </div>
@@ -26,7 +25,9 @@
         </div>
         <div class="row">
             <div class="col-6" style="text-align: center">
-                <button type="submit"  class="btn btn-primary form-control">Delete Group</button>
+                <button type="button" class="btn btn-primary form-control" onclick="confirmDelete()">
+                    <i class="bi bi-trash-fill"></i> Delete
+                </button>
             </div>
             <div class="col-6" style="text-align: center">
                 <a asp-controller="GolfGroup" asp-action="Index" asp-route-GRId="@ViewBag.GRId"
@@ -37,6 +38,7 @@
         </div>
     </form>
 </div>
+
 @section Scripts {
     @{
         <partial name="_ValidationScriptsPartial" />

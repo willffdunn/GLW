@@ -1,6 +1,5 @@
 ﻿@model List<Event>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<partial name="pvNotification" />
 
 <div class-"container" style="width:100%">
     <div class="row pt-2 pb-1" style="margin-top:-50px ">
@@ -8,16 +7,24 @@
             <h3 class=" text-primary" style="text-align:center">Event List</h3>
         </div>
         <br />
-        <div class="col=6">
-            <a asp asp-controller="Event" asp-action="Upsert" class="btn btn-primary">
-                Add an Event
+        <div class="row">
+            <div class="col-6">
+                <a asp-controller="Event" asp-action="Upsert" class="btn btn-sm btn-primary   form-control">
+                    Add an Event
+                    <i class="bi bi-plus-circle"></i>
+                </a>
+            </div>
+            <div class="col-6">
+            <a asp asp-controller="Event" asp-action="EvCalendar" class="btn btn-primary bt form-control" >
+                Event Calendar
                 <i class="bi bi-plus-circle"></i>
             </a>
-        </div>
+            </div>
+          </div>  
     </div>
     
     <div >
-        <table class="table table-bordered table-striped ">
+        <table id="eTable" class="table table-bordered table-striped ">
             <thead >
 
                 <tr>
@@ -81,6 +88,11 @@
     </div>
 
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#eTable').DataTable();
+    });
+</script>
 
 
 @section Scripts {

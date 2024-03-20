@@ -1,9 +1,8 @@
 ﻿@model Event
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<partial name="pvNotification" />
 
 <div style="margin-top: -50px">
-    <form method="post">
+    <form id="deleteForm" method="post" action="@Url.Action("Delete", "Event")">
         <div class="pt-4 mt-3" style="text-align:center">
             <div asp-validation-summary="All">
                 <div class="row pb-2">
@@ -11,6 +10,7 @@
                     <hr />
                     <ul style="list-style-type:none;">
                         <li>
+                            <input hidden asp-for="EvId" />
                             <input disabled asp-for="EvShortDescription" class="form-divided" placeholder="Event Short Description"/>
                             <span asp-validation-for="EvShortDescription" class="text-danger"></span>
 
@@ -32,9 +32,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-6" style="text-align:center" >
-                <button type="submit" class="btn btn-primary form-control">Delete Event</button>
-            </div>
+            <button type="button" class="btn btn-primary form-control" onclick="confirmDelete()">
+                <i class="bi bi-trash-fill"></i> Delete
+            </button>
             <div class="col-6">
                 <a asp asp-controller="Event" asp-action="Index" class="btn btn-secondary form-control">
                     Back to List

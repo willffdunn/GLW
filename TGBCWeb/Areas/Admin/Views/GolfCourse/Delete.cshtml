@@ -2,8 +2,8 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <partial name="pvNotification" />
 <div style="margin-top: -50px">
-<form method="post">
-    <div class="pt-4 mt-3" >
+    <form id="deleteForm" method="post" action="@Url.Action("Delete", "GolfCourse")">
+        <div class="pt-4 mt-3">
         <div asp-validation-summary="All">
             <div class="row pb-2" >
                 <h3 class="text-primary" style="text-align:center"> Delete Golf Course</h3>
@@ -12,6 +12,7 @@
                     <ul style="list-style-type:none; text-align:center">
 
                         <li>
+                        <input hidden asp-for="GCId" />
                         <input asp-for="GCName" disabled class="field-divided" placeholder="Course Name" size="50" />
                         <span asp-validation-for="GCName" class="text-danger"></span>
                     </li>
@@ -126,7 +127,9 @@
     </div>
     <div class="row">
         <div class="col-6">
-            <button type="submit" class="btn btn-primary form-control">Delete Course</button>
+            <button type="button" class="btn btn-primary form-control" onclick="confirmDelete()">
+                <i class="bi bi-trash-fill"></i> Delete
+            </button>
         </div>
         <div class="col-6">
             <a asp asp-controller="GolfCourse" asp-action="Index" class="btn btn-secondary form-control">

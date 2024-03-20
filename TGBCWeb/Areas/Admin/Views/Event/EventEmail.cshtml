@@ -1,74 +1,208 @@
-﻿@using Models;
-@model EventEmailVM
+﻿@using Models
+@model EventVM
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<partial name="pvNotification" />
-
-<div style="margin-top: -60px">
-    <form method="post" class="form-inline">
-        <div class="pt-4 mt-3" style="text-align:center">
+l<div style="margin-top: -45px">
+    <form method="post">
+        <div class="pt-4 mt-3" style="text-align: center">
             <div asp-validation-summary="All">
-                <div class="row pb-2" >
-                    <h3 style="text-align:center">Email Event</h3>
-                    <h3 style="text-align:center">@Model.Event.EvShortDescription on @Model.Event.EvDate</h3>
+                <div class="row pb-2">
+                    <h3 class="text-primary" style="text-align:center"> Email Event</h3>
+                    <hr />
+                    <ul style="list-style-type:none;">
+                        <li>
+                            <input type="hidden" asp-for="@Model.EmailSender" />
+                            <input type="hidden" asp-for="@Model.AvailableRecipients" />
+                            <input type="hidden" asp-for="@Model.EmailRecipients" />
+                            <input type="hidden" asp-for="@Model.Event" />
+
+                            <input type="hidden" asp-for="@Model.Event.EvId" />
+                            <input disabled asp-for="@Model.Event.EvShortDescription" placeholder="Event Short Description" style="width:400px; text-align:center" />
+                            <span asp-validation-for="@Model.Event.EvShortDescription" class="text-danger"></span>
+                            <input disabled asp-for="@Model.Event.EvLocation" placeholder="Event Location" style="width:400px; text-align:center" />
+                            <span asp-validation-for="@Model.Event.EvLocation" class="text-danger"></span>
+                        </li>
+                        <br />
+                        <li>
+                            <Label>  Event Type</Label>
+                            <select disabled asp-for="@Model.Event.EvType" class="form-divided">
+                                <option value="Golf Round">Golf Round</option>
+                                <option value="Golf Dinner">Golf Dinner</option>
+                            </select>
+                            <Label>  Event Start</Label>
+                            <input type="Date" disabled asp-for="@Model.Event.EvDate" class="field-divided" placeholder="Event Date" size="10" />
+                            <span asp-validation-for="@Model.Event.EvDate" class="text-danger"></span>
+
+                            <input type="Time" disabled asp-for="@Model.Event.EvTime" class="field-divided" placeholder="Event Time" size="10" />
+                            <span asp-validation-for="@Model.Event.EvTime" class="text-danger"></span>
+                            <Label>  Event End</Label>
+                            <input type="Date" disabled asp-for="@Model.Event.EvEndDate" class="field-divided" placeholder="Event Date" size="10" />
+                            <span asp-validation-for="@Model.Event.EvEndDate" class="text-danger"></span>
+                            <input type="Time" disabled asp-for="@Model.Event.EvEndTime" class="field-divided" placeholder="Event End Time" size="10" />
+                            <span asp-validation-for="@Model.Event.EvEndTime" class="text-danger"></span>
+                        </li>
+                        <br />
+                        <li>
+                            <Label>Reg Method</Label>
+                            <select disabled asp-for="@Model.Event.EvRegMethod" class="form-divided">
+                                <option value="Email">Email</option>
+                                <option value="Phone">Onsite</option>
+                                <option value="Phone">Both</option>
+                            </select>
+                            <Label>  Reg Start</Label>
+                            <input type="Date" disabled asp-for="@Model.Event.EvRegStartDate" class="field-divided"
+                                   placeholder="Event Registration Start Date" size="8" />
+                            <span asp-validation-for="@Model.Event.EvRegStartDate" class="text-danger"></span>
+                            <input type="Time" disabled asp-for="@Model.Event.EvRegStartTime" class="field-divided" size="8" />
+                            <span asp-validation-for="@Model.Event.EvRegStartTime" class="text-danger"></span>
+                            <Label>  Reg End</Label>
+                            <input type="Date" disabled asp-for="@Model.Event.EvRegEndDate" class="field-divided"
+                                   placeholder="Event Registration Start Date" size="8" />
+                            <span asp-validation-for="@Model.Event.EvRegEndDate" class="text-danger"></span>
+                            <input type="Time" disabled asp-for="@Model.Event.EvRegEndTime" class="field-divided" size="8" />
+                            <span asp-validation-for="@Model.Event.EvRegEndTime" class="text-danger"></span>
+                        </li>
+                        <br />
+                        <li>
+                            <Label>Price per Participant</Label>
+                            <input disabled asp-for="@Model.Event.EvFeeAmount" class="field-divided"
+                                   placeholder="Price" size="10" />
+                            <span asp-validation-for="@Model.Event.EvFeeAmount" class="text-danger"></span>
+                            <Label>Instructions / Comments</Label>
+                            <input disabled asp-for="@Model.Event.EvRegComment" class="field-divided"
+                                   placeholder="Registration Comment" size="40" />
+                            <span asp-validation-for="@Model.Event.EvRegComment" class="text-danger"></span>
+                        </li>
+                        <br />
+                        <li>
+                            <input disabled asp-for="@Model.Event.EvContactFName" class="field-divided"
+                                   placeholder="Contact First Name" size="18" />
+                            <span asp-validation-for="@Model.Event.EvContactFName" class="text-danger"></span>
+                            &nbsp
+                            <input disabled asp-for="@Model.Event.EvContactLName" class="field-divided"
+                                   placeholder="Contact Last Name" size="18" />
+                            <span asp-validation-for="@Model.Event.EvContactLName" class="text-danger"></span>
+                            &nbsp
+                            <input disabled asp-for="@Model.Event.EvContactEmail" class="field-divided"
+                                   placeholder="Contact Email" size="18" />
+                            &nbsp
+                            <span asp-validation-for="@Model.Event.EvContactEmail" class="text-danger"></span>
+                            <input disabled asp-for="@Model.Event.EvContactPhoneNumber" class="field-divided"
+                                   placeholder="Contact Phone Number" size="18" />
+                            <span asp-validation-for="@Model.Event.EvContactPhoneNumber" class="text-danger"></span>
+                        </li>
+                        <br />
+                        <li>
+                            <textarea id="summernote" name="EvDescription" style="text-align:center"
+                                      disabled asp-for="@Model.Event.EvDescription" placeholder="Event Description"></textarea>
+                            <span asp-validation-for="@Model.Event.EvDescription" class="text-danger"></span>
+                        </li>
+                    </ul>
                 </div>
-                <hr />
-                <div col="12" style="text-align:center">
-                    <input type="hidden" asp-for="@Model.Event.EvDate" />
-                    <input type="hidden" asp-for="@Model.Event.EvType" />
-
-                <li>
-                    <textarea name="EmailMessage" asp-for="@Model.EmailMessage" style="text-align:center" size="200" placeholder="Email Message"></textarea>
-                    <span asp-validation-for="@Model.EmailMessage" class="text-danger"></span>
-
-                </li>
-                  <table class="table">
-                    <thead style="background-color:lightblue">
-                        <tr>
-                            <th>
-                                Select Email Recepients
-                            </th>
-                            <th>
-                                
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>    
-                                <select asp-for="@Model.SelectedRecipients" asp-items="@Model.AvailableRecipients" SelectMode="multiple" class="form-divided" width="70px">
-                                    <option disabled selected>--  Email Recepients--</option>
-                                    <span asp-validation-for="@Model.SelectedRecipients" class="text-danger"></span>
-                                </select>
-                            </th>
-                            <th>
-                                <label> "Use CTRL + Click for Single Select"></label>
-
-                                <label> "Use Shift + Down Arrow + Click for Multiple Selections"></label>
-                            </th>
-                        </tr>
-                      </tbody>
-                </table>
-                <li>
-                    <textarea id="summernote" name="EvDescription" style="text-align:center" disabled size="700"
-                                asp-for="@Model.Event.EvDescription" placeholder="Event Description"></textarea>
-                    <span asp-validation-for="@Model.Event.EvDescription" class="text-danger"></span>
-               </li>
-                </div>
-            <div class="col-6">
-              <button type="submit" class="btn btn-primary form-control">Send Email</button>
-                <a asp asp-controller="Event" asp-action="Index" class="btn btn-secondary form-control">
-                    Back to List
-                </a>
             </div>
         </div>
+/
+        <div class="modal" id="myModal">
+            {
+                <div class="modal-dialog">
+                    <!-- Modal content goes here -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Select Email Recepients</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal">X</button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <input type="hidden" asp-for="@Model.AvailableRecipients" />
+                                <input type="hidden" asp-for="@Model.Event.EvLocation" />
+                                <input type="hidden" asp-for="@Model.AvailableRecipients" />
+                                <input type="hidden" asp-for="@Model.Event.EvDate" />
+                                <input type="hidden" asp-for="@Model.Event.EvId" />
+                                <input type="hidden" asp-for="@Model.Event.EvShortDescription" />
+                                <input type="hidden" asp-for="@Model.Event.EvTime" />
+                                <input type="hidden" asp-for="@Model.Event.EvDescription" />
+
+                                <label>From: </label> <input asp-for="@Model.EmailSender" placeholder="Email Sender" size="40px" />
+                                <br />
+                                <br />
+                                <p Style="font-weight: bold; text-align: left; font-size:small; color: #325d88;">
+                                    Select All for All Members / Ctrl + Select for Multiple Members
+                                </p>
+                                <select asp-for="@Model.EmailRecipients" id="languages" asp-items="@Model.AvailableRecipients" size="4" multiple="multiple"
+                                        class="form-control selectpicker show-tick select-all" data-selected-text-format="count > 2">
+                                    <option value="[all]" class="select-all">All Items</option>
+                                    <span asp-validation-for="@Model.EmailRecipients" class="text-danger"></span>
+                                </select>
+                                <br />
+                                <textarea name="EmailMessage" class="form-control" cols="60" rows="8"
+                                          asp-for="@Model.EmailMessage" placeholder="Email Message"></textarea>
+                                <span asp-validation-for="@Model.EmailMessage" class="text-danger"></span>
+                            <script>
+                            $(document).ready(function () {
+                                $('#myModal').modal('show');
+
+                                $('.selectpicker.select-all').on('change', function () {
+                                // Your existing code for handling select-all change
+                                }).trigger('change');
+
+                                // Assuming you have a button with the ID 'submit'
+                                $("#submit").click(function () {
+                                var selectedValues = $("#languages option:selected").map(function () {
+                                return this.value;
+                                }).get().join(",");
+                               });
+                            });
+                            </script>
+                            <div class="modal-footer">
+                                <div class="col-2" style="text-align:center">
+                                    <button type="button" class="btn btn-Secondary form-control" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                                <div class="col-2" style="text-align:center">
+                                    <button type="submit" class="btn btn-primary form-control">Send</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </form>
 </div>
 @section Scripts {
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Create Event',
+            height: 700,
+            minHeight: null,
+            maxHeight: null,
+            focus: true,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['picture', 'link', 'video']],
+                ['table', ['table']],
+                ['view', ['fullscreen', 'codeview']],
+            ]
+        });
+
+    </script>
 
     @{
         <partial name="_ValidationScriptsPartial" />
     }
-
 }
+
+
+
+
+
+
+
+
+

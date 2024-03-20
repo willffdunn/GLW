@@ -1,79 +1,170 @@
-﻿@model Event
+﻿@using Models
+@model Event
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<partial name="pvNotification" style="margin-left: -60px" />
 
 <div style="margin-top: -45px">
     <form method="post">
         <div class="pt-4 mt-3" style="text-align: center">
-         
             <div asp-validation-summary="All">
                 <div class="row pb-2" >
-                    <h3 class="text-primary" style="text-align:center">@(Model.EvId != 0 ? "Update" : "Add an") Event</h3>
+                    <h3 class="text-primary" style="text-align:center">@(Model.EvId != 0 ? "Update" : "Add a") Event</h3>
                     <hr />
+     
+                    <style>
+                        input {
+                            text-align: center;
+                            font-weight: 500;
+                            color: #325d88;
+                        }
+
+                        select {
+                            font-weight: 500;,,,
+                            color: #325d88;
+                        }
+                    </style>
+                    <div style="font-weight: bold">
                     <ul style="list-style-type:none;">
                         <li>
-                            <input type="hidden" asp-for="EvId" />
-                            <input asp-for="EvShortDescription" placeholder="Event Short Description" style="width:400px; text-align:center" />
-                            <span asp-validation-for="EvShortDescription" class="text-danger"></span>
+                            <input type="hidden" asp-for="@Model.EvId" />
+                            <input asp-for="@Model.EvShortDescription" placeholder="Event Short Description" style="width:400px; text-align:center" />
+                            <span asp-validation-for="@Model.EvShortDescription" class="text-danger"></span>
+                            <input asp-for="@Model.EvLocation" placeholder="Event Location" style="width:400px; text-align:center" />
+                            <span asp-validation-for="@Model.EvLocation" class="text-danger"></span>
                         </li>
                         <br />
                         <li>
                             <Label>  Event Type</Label>
-                            <select asp-for="EvType" class="form-divided">
+                            <select asp-for="@Model.EvType" class="form-divided">
                                 <option value="Golf Round">Golf Round</option>
                                 <option value="Golf Dinner">Golf Dinner</option>
                             </select>
-
-                            <input type="Date" asp-for="EvDate" class="field-divided" placeholder="Event Date" size="50" />
-                            <span asp-validation-for="EvDate" class="text-danger"></span>
+                            <Label>  Event Start</Label>
+                            <input type="Date" asp-for="@Model.EvDate" class="field-divided" placeholder="Event Date" size="10" />
+                            <span asp-validation-for="@Model.EvDate" class="text-danger"></span>
+                           
+                            <input type="Time" asp-for="@Model.EvTime" class="field-divided" placeholder="Event Time" size="10" />
+                            <span asp-validation-for="@Model.EvTime" class="text-danger"></span>
+                            <Label>  Event End</Label>
+                            <input type="Date" asp-for="@Model.EvEndDate" class="field-divided" placeholder="Event Date" size="10" />
+                            <span asp-validation-for="@Model.EvEndDate" class="text-danger"></span>
+                            <input type="Time" asp-for="@Model.EvEndTime" class="field-divided" placeholder="Event End Time" size="10" />
+                            <span asp-validation-for="@Model.EvEndTime" class="text-danger"></span>
                         </li>
                         <br />
-
                         <li>
-                            <textarea id="summernote" name="EvDescription" style="text-align:center"
-                                asp-for="EvDescription" placeholder="Event Description"></textarea>
-                            <span asp-validation-for="EvDescription" class="text-danger"></span>
-
+                            <Label>Reg Method</Label>
+                            <select asp-for="@Model.EvRegMethod" class="form-divided">
+                                <option value="Email">Email</option>
+                                <option value="Phone">Onsite</option>
+                                <option value="Phone">Both</option>
+                            </select>
+                            <Label>  Reg Start</Label>
+                            <input type="Date" asp-for="@Model.EvRegStartDate" class="field-divided"
+                                    placeholder="Event Registration Start Date" size="8" />
+                            <span asp-validation-for="@Model.EvRegStartDate" class="text-danger"></span>
+                            <input type="Time" asp-for="@Model.EvRegStartTime" class="field-divided"  size="8" />
+                            <span asp-validation-for="@Model.EvRegStartTime" class="text-danger"></span>
+                            <Label>  Reg End</Label>
+                            <input type="Date" asp-for="@Model.EvRegEndDate" class="field-divided"
+                                    placeholder="Event Registration Start Date" size="8" />
+                            <span asp-validation-for="@Model.EvRegEndDate" class="text-danger"></span>
+                            <input type="Time" asp-for="@Model.EvRegEndTime" class="field-divided"  size="8" />
+                            <span asp-validation-for="@Model.EvRegEndTime" class="text-danger"></span>
                         </li>
-
+                        <br />
+                        <li>
+                            <Label>Price per Participant</Label>
+                            <input asp-for="@Model.EvFeeAmount" class="field-divided"
+                                   placeholder="Price" size="10" />
+                            <span asp-validation-for="@Model.EvFeeAmount" class="text-danger"></span>
+                            <Label>Instructions / Comments</Label>
+                            <input asp-for="@Model.EvRegComment" class="field-divided"
+                                   placeholder="Registration Comment" size="40" />
+                            <span asp-validation-for="@Model.EvRegComment" class="text-danger"></span>
+                        </li>
+                        <br />
+                        <li>
+                            <input asp-for="@Model.EvContactFName" class="field-divided"
+                                    placeholder="Contact First Name" size="18" />
+                            <span asp-validation-for="@Model.EvContactFName" class="text-danger"></span>
+                                &nbsp
+                            <input asp-for="@Model.EvContactLName" class="field-divided"
+                                    placeholder="Contact Last Name" size="18" />
+                            <span asp-validation-for="@Model.EvContactLName" class="text-danger"></span>
+                                &nbsp
+                            <input asp-for="@Model.EvContactEmail" class="field-divided"
+                                    placeholder="Contact Email" size="18" />
+                                &nbsp
+                            <span asp-validation-for="@Model.EvContactEmail" class="text-danger"></span>
+                            <input asp-for="@Model.EvContactPhoneNumber" class="field-divided"
+                                    placeholder="Contact Phone Number" size="18" />
+                            <span asp-validation-for="@Model.EvContactPhoneNumber" class="text-danger"></span>
+                        </li>
+                        <br />
+                        <li>
+                            <textarea  id="summernote" name="EvDescription" style="text-align:center"
+                                asp-for="@Model.EvDescription" placeholder="Event Description"></textarea>
+                            <span asp-validation-for="@Model.EvDescription" class="text-danger"></span>
+                        </li>
                     </ul>
                 </div>
-
+              </div>
             </div>
         </div>
         <div class="row">
             <div class="col-4" style="text-align:center">
-                <button type="submit" class="btn btn-primary form-control">Save Changes</button>
+                <button type="submit" class="btn btn-primary form-control">Save</button>
             </div>
             <div class="col-4">
-                <a asp asp-controller="Event" asp-action="Index" class="btn btn-secondary form-control">
-                    Back to List
+                <a asp asp-controller="Event" asp-action="EventParticipant" asp-route-EvId="@Model.EvId"
+                class="btn btn-primary form-control">
+                    Add Participants
                 </a>
             </div>
             <div class="col-4">
-                <a asp asp-controller="Event" asp-action="EventEmail" asp-route-EvId=@Model.EvId class="btn btn-secondary form-control" >
+                <a asp asp-controller="Event" asp-action="EventEmail" asp-route-EvId="@Model.EvId"
+                   class="btn btn-primary form-control">
                     Email Event
                 </a>
             </div>
-
         </div>
-        <script>
-            $('#summernote').summernote({
-                placeholder: 'Hello Bootstrap 4',
-                tabsize: 2,
-                height: 100
-            });
- 
-        </script>
-
     </form>
 </div>
 @section Scripts {
-    
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Create Event',
+            height: 150,
+            minHeight: null,
+            maxHeight: null,
+            focus: true,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['picture', 'link', 'video']],
+                ['table', ['table']],
+                ['view', ['fullscreen', 'codeview']],
+            ]
+        });
+
+        let buttons = $('.note-editor button[data-toggle="dropdown"]');
+
+        buttons.each((key, value) => {
+            $(value).on('click', function (e) {
+                $(this).attr('data-bs-toggle', 'dropdown')
+                console.log()
+                ata('id', 'dropdownMenu');
+            })
+        });
+    </script>
     @{
         <partial name="_ValidationScriptsPartial" />
     }
-
 }
 
 

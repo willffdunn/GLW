@@ -2,14 +2,13 @@
 @using Microsoft.AspNetCore.Identity;
 @using Models
 @using TBGC.Utility;
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 @{
     var usr = await UserManager.GetUserAsync(User);
     var email = usr?.Email;
 }
 @model List<Member>
-<partial name="pvNotification"/>
 
 <div class-"container" style="margin-top: -50px ">
     <div class="row pt-2 pb-1">
@@ -18,7 +17,7 @@
             Member List
          </h3>
         </div>
-        @if (User.IsInRole(SD.Role_Admin))
+        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_League_Admin))
         {
             <div class="col=6 align-text-left">
                 <a asp  asp-controller="Member" asp-action="Create" class="btn btn-primary">
@@ -33,12 +32,12 @@
         }
     </div>
   <div>
-    <table class="table table-bordered table-striped " >
+    <table id ="mTable" class="table table-bordered table-striped " >
      <thead style="background-color:lightblue">
 
         <tr >
-            @if (User.IsInRole(SD.Role_Admin))
-            {
+        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_League_Admin))
+        {
             <th>
               Edit
             </th>
@@ -57,10 +56,13 @@
               Member Type
             </th>
             <th>
+              Registered
+            </th>
+            <th>
                 Phone
             </th>
-            @if (User.IsInRole(SD.Role_Admin))
-            {
+        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_League_Admin))
+        {
             <th>
                 Delete
             </th>
@@ -73,7 +75,7 @@
         @foreach(var obj in Model)
         {
             <tr>
-                @if (User.IsInRole(SD.Role_Admin))
+                @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_League_Admin))
                 {
                     <th>
 
@@ -106,10 +108,13 @@
                     @obj.MemberType
                 </th>
                 <th>
+                    @obj.Registered
+                </th>
+                <th>
                     @obj.PhoneNumber
                 </th>
-                @if (User.IsInRole(SD.Role_Admin))
-                {
+                    @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_League_Admin))
+                    {
                 <th>
                     <div class="w-50 bntn-group" role="group" >
                         <a asp-controller="Member" asp-action="Delete" asp-route-MemberId="@obj.MemberId" class="btn btn-danger" >
@@ -124,3 +129,8 @@
     </table>
    </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#mTable').DataTable();
+    });
+</script>

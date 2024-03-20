@@ -1,29 +1,8 @@
-﻿using DataAccess.Repository;
-using DataAccess.Repository.IRepository;
-using static DataAccess.Repository.UnitOfWork;
+﻿using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using System.Collections;
-using System.Linq.Expressions;
-using Models;
-using Humanizer;
-using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Linq;
-using System;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using TBGC.Models;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using System.Collections.Generic;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Utility;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
 
 namespace TBGCWeb.Areas.Admin.Controllers
 {
@@ -326,7 +305,7 @@ namespace TBGCWeb.Areas.Admin.Controllers
                     _unitOfWork.Save();
 
                     // After adding the player, send a confirmation email
-                    if (golfRound.GCId != 1)
+                    if (golfRound.GCId == 99)
                     {
                         GolfGroup golfGroup = _unitOfWork.GolfGroup.Get(u => u.GGId == member.GGId);
                         string GGName = golfGroup.GGName;
@@ -359,6 +338,7 @@ namespace TBGCWeb.Areas.Admin.Controllers
 
             return RedirectToAction("IndexR", new { GRId = gRId });
         }
+
         public IActionResult Delete(int? GPId)
         {
             {
@@ -380,20 +360,24 @@ namespace TBGCWeb.Areas.Admin.Controllers
             ViewBag.GGTtime = golfGroup.GGTtime;
             return View(golfPlayer);
         }
+        #region API CALLS
+
         [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(GolfPlayer obj)
+        public IActionResult DeletePost(GolfPlayer obj)
         {
             GolfPlayer golfPlayer = _unitOfWork.GolfPlayer.Get(u => u.GPId == obj.GPId,
             includeProperties: "GolfGroup");
             if (golfPlayer == null)
             {
-                return NotFound("");
+                return Json(new { success = false, message = "Golf Player not found" });
             }
             _unitOfWork.GolfPlayer.Remove(golfPlayer);
             _unitOfWork.Save();
             TempData["Success"] = "GolfPlayer deleted";
-            return RedirectToAction("Index", new { GRId = golfPlayer.GolfGroup.GRId });
+            return RedirectToAction("Index", new { GGId = obj.GGId });
         }
+        
     }
 }
 
+        #endregion

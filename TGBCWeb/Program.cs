@@ -2,38 +2,56 @@ using DataAccess.Repository;
 using DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using TBGC.DataAccess.Data;
-using TBGC.DataAccess.Repository;
-using TBGC.DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Utility;
 using DataAccess.DBInitializer;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
+using TBGC.DataAccess.DbInitializer;
+using Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(100);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+
+});
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
-
 builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLocalService>();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDBContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.User.RequireUniqueEmail = false;
+    
+    }
+).AddEntityFrameworkStores<ApplicationDBContext>().AddDefaultTokenProviders();
+builder.Services.AddAuthentication()
+    .AddFacebook(facebookoptions =>
+    {
+        facebookoptions.AppId = builder.Configuration.GetSection("FacebookAuthSettings").GetValue<string>("AppId");
+        facebookoptions.AppSecret = builder.Configuration.GetSection("FacebookAuthSettings").GetValue<string>("AppSecret");
+    });
+builder.Services.AddAuthentication()
+    .AddGoogle(googleoptions =>
+    {
+        googleoptions.ClientId = builder.Configuration.GetSection("GoogleAuthSettings").GetValue<string>("ClientId");
+        googleoptions.ClientSecret = builder.Configuration.GetSection("GoogleAuthSettings").GetValue<string>("ClientSecret");
+    });
+
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IDBInitializer, DbInitializer>();
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
-
-
-
-
-
-
 
 
 var app = builder.Build();
@@ -51,9 +69,9 @@ if (!app.Environment.IsDevelopment())
 //TwilioClient.Init(accountSid, authToken);
 
 //var message = MessageResource.Create(
-  //  body: "This is the ship that made the Kessel Run in fourteen parsecs?",
-    //from: new Twilio.Types.PhoneNumber("+18445130861"),
-    //to: new Twilio.Types.PhoneNumber("+14848857000")
+//  body: "This is the ship that made the Kessel Run in fourteen parsecs?",
+//from: new Twilio.Types.PhoneNumber("+18445130861"),
+//to: new Twilio.Types.PhoneNumber("+14848857000")
 //);
 
 //Console.WriteLine(message.Sid);
@@ -61,6 +79,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 SeedDatabase();

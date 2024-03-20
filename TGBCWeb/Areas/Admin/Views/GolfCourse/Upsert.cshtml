@@ -1,6 +1,5 @@
 ﻿@model GolfCourse
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<partial name="pvNotification" />
 
 <div style="margin-top: -50px">
     <form method="post">
@@ -116,6 +115,7 @@
 
                             <Label> Nbr Of Holes</Label>
                             <select asp-for="GCNbrHoles" class="form-divided">
+                                <option value="9">9</option>
                                 <option value="18">18</option>
                                 <option value="27">27</option>
                             </select>

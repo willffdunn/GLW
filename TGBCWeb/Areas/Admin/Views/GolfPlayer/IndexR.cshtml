@@ -1,7 +1,6 @@
 ﻿@using Models;
 @model List<GolfPlayer>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<partial name="pvNotification" />
 
 <div class-"container" style="width:100%">
     <div class="row pt-2 pb-1">
@@ -22,9 +21,9 @@
         </div>
 
         <div style="text-align:center">
-            <table class="table table-bordered table-striped ">
+            <table id="gPRTable"class="table table-bordered table-striped ">
                 <thead>
-                    <tr>
+                    <tr style ="text-align:center">
                         <th>
                             Score
                         </th>
@@ -52,7 +51,7 @@
                     {
                         @foreach (var obj in Model)
                         {
-                            <tr>
+                            <tr style="text-align:center">
                                 <th>
                                     <div class="w-50 bntn-group" role="group">
                                         <a asp-controller="GolfScore" asp-action="GPScore" asp-route-GPId=@obj.GPId
@@ -70,7 +69,7 @@
                                     </div>
                                 </th>
                                 <th>
-                                    <a href="Member/Edit?MemberId=@obj.MemberId">
+                                    <a href="Member/Browse.?MemberId=@obj.MemberId">
                                         @obj.GPFName @obj.GPLName
                                     </a>
 
@@ -102,7 +101,11 @@
         </div>
     </div>
 </div>
-
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#gPRTable').DataTable();
+    });
+</script>
 
 @section Scripts {
 
