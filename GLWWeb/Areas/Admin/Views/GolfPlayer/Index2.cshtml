@@ -1,0 +1,96 @@
+﻿@using Models;
+@model List<GolfPlayerVM>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class-"container" style="width:100%" >
+     <form method="post">
+        <div class="row pt-2 pb-1" >
+            <div class="col=4" style="margin-top: -60px">
+            <div class="row pb-2" style="text-align: center ">
+                <h3 class="text-primary" style="text-align:center">@ViewBag.GCName</h3>
+                <h4 class="text-primary" style="text-align:center">@ViewBag.GRDate   @ViewBag.GGTtime</h4>
+            </div>
+            <div class="row pb-2" >
+                <h4 style="text-align: center" class="text-primary">@ViewBag.GGName </h4>
+        </div>
+                <div class="col=8" >
+            <a asp asp-controller="GolfPlayer" asp-action="Upsert" asp-route-GRId="@Model[0].GRId" class="btn btn-primary">
+                Add Guests
+                <i class="bi bi-plus-circle"></i>
+            </a>
+        </div>
+    </div>
+
+    <div style="text-align: center ">
+        <table id="gPITable" class="table table-bordered table-striped ">
+            <thead>
+                <tr>
+                    <th>
+                        Member
+                    <th>
+                        Member Type
+                    </th>
+                    <th>
+                        Group
+                </tr>
+            </thead>
+            <tbody>
+                @{var i = 0;}
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        <input type="hidden" asp-for=@Model[i].GRId />
+                        <input type="hidden" asp-for=@Model[i].Member.MemberId />
+                        <input type="hidden" asp-for=@Model[i].Member.MemberType />
+                        <input type="hidden" asp-for=@Model[i].Member.FirstName />
+                        <input type="hidden" asp-for=@Model[i].Member.LastName />
+                        <input type="hidden" asp-for=@Model[i].Member.Email />
+                       <th>
+                            <a href="Member/Edit?GCID=@Model[i].Member.MemberId">
+                                        @Model[i].Member.FirstName @Model[i].Member.LastName
+                                    </a>
+                        </th>
+                        <th>
+                            @obj.Member.MemberType
+                        </th>
+                        <th>
+                            <select asp-for=@Model[i].GGId asp-items="@ViewBag.GroupList" class="form-divided">
+                            <option value="0">--Select Group--</option>
+                            <label asp-for=@Model[i].GGId></label>
+                                <span asp-validation-for=@Model[i].GGId class="text-danger"></span>
+                            </select>
+
+                        </th>
+                     </tr>
+                        i++;
+                }
+            </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+            <div class="col-12" style="text-align: center ">
+            <button type="submit" style="width: 300px"  class="btn btn-primary form-divided">Add Players</button>
+
+            <a asp asp-controller="GolfPlayer" asp-action="Index" asp-route-GRId="@Model[0].GRId"
+            style="width: 300px" class="btn btn-secondary form-divided">
+            Back to List
+         </a>
+        </div>
+    </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#gPITable').DataTable();
+    });
+</script>
+
+
+@section Scripts {
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}
