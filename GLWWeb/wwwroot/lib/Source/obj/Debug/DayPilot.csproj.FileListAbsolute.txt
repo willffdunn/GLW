@@ -1,0 +1,2 @@
+C:\Users\willf\OneDrive\Documents\Visual Studio 2022\Projects\TBGC\TGBCWeb\wwwroot\lib\Source\obj\Debug\DayPilot.csproj.AssemblyReference.cache
+C:\Users\willf\OneDrive\Documents\Visual Studio 2022\Projects\TBGC\TGBCWeb\wwwroot\lib\Source\obj\Debug\DayPilot.csproj.CoreCompileInputs.cache
