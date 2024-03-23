@@ -1960,65 +1960,7 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Models.ViewModels.EventParticipant", b =>
-                {
-                    b.Property<int>("EPId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EPId"));
-
-                    b.Property<string>("EPEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EPFName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EPLName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EPPhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EPType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("EvId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EPId");
-
-                    b.HasIndex("EvId");
-
-                    b.ToTable("EvParticipants");
-
-                    b.HasData(
-                        new
-                        {
-                            EPId = 1,
-                            EPEmail = "willffdunn@tropicbaygolf.com",
-                            EPFName = "Bill",
-                            EPLName = "Dunn",
-                            EPPhoneNumber = "(999)999-9999",
-                            EPType = "Sponsor",
-                            EvId = 1,
-                            LId = 0,
-                            MemberId = 1
-                        });
-                });
-
-            modelBuilder.Entity("GLW.Models.Event", b =>
+            modelBuilder.Entity("Models.Event", b =>
                 {
                     b.Property<int>("EvId")
                         .ValueGeneratedOnAdd()
@@ -2130,7 +2072,65 @@ namespace DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("GLW.Models.GolfGroup", b =>
+            modelBuilder.Entity("Models.EventParticipant", b =>
+                {
+                    b.Property<int>("EPId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EPId"));
+
+                    b.Property<string>("EPEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EPFName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EPLName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EPPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EPType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EvId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EPId");
+
+                    b.HasIndex("EvId");
+
+                    b.ToTable("EvParticipants");
+
+                    b.HasData(
+                        new
+                        {
+                            EPId = 1,
+                            EPEmail = "willffdunn@tropicbaygolf.com",
+                            EPFName = "Bill",
+                            EPLName = "Dunn",
+                            EPPhoneNumber = "(999)999-9999",
+                            EPType = "Sponsor",
+                            EvId = 1,
+                            LId = 0,
+                            MemberId = 1
+                        });
+                });
+
+            modelBuilder.Entity("Models.GolfGroup", b =>
                 {
                     b.Property<int>("GGId")
                         .ValueGeneratedOnAdd()
@@ -2164,7 +2164,7 @@ namespace DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("GLW.Models.GolfRound", b =>
+            modelBuilder.Entity("Models.GolfRound", b =>
                 {
                     b.Property<int>("GRId")
                         .ValueGeneratedOnAdd()
@@ -2204,7 +2204,7 @@ namespace DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("GLW.Models.League", b =>
+            modelBuilder.Entity("Models.League", b =>
                 {
                     b.Property<int>("LId")
                         .ValueGeneratedOnAdd()
@@ -2336,7 +2336,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("GolfPlayer", b =>
                 {
-                    b.HasOne("GLW.Models.GolfGroup", "GolfGroup")
+                    b.HasOne("Models.GolfGroup", "GolfGroup")
                         .WithMany()
                         .HasForeignKey("GGId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2366,7 +2366,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Member", b =>
                 {
-                    b.HasOne("GLW.Models.League", "League")
+                    b.HasOne("Models.League", "League")
                         .WithMany()
                         .HasForeignKey("LId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2426,20 +2426,9 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Models.ViewModels.EventParticipant", b =>
+            modelBuilder.Entity("Models.Event", b =>
                 {
-                    b.HasOne("GLW.Models.Event", "Event")
-                        .WithMany()
-                        .HasForeignKey("EvId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-                });
-
-            modelBuilder.Entity("GLW.Models.Event", b =>
-                {
-                    b.HasOne("GLW.Models.League", "League")
+                    b.HasOne("Models.League", "League")
                         .WithMany()
                         .HasForeignKey("LId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2448,9 +2437,20 @@ namespace DataAccess.Migrations
                     b.Navigation("League");
                 });
 
-            modelBuilder.Entity("GLW.Models.GolfGroup", b =>
+            modelBuilder.Entity("Models.EventParticipant", b =>
                 {
-                    b.HasOne("GLW.Models.GolfRound", "GolfRound")
+                    b.HasOne("Models.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EvId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("Models.GolfGroup", b =>
+                {
+                    b.HasOne("Models.GolfRound", "GolfRound")
                         .WithMany()
                         .HasForeignKey("GRId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2459,7 +2459,7 @@ namespace DataAccess.Migrations
                     b.Navigation("GolfRound");
                 });
 
-            modelBuilder.Entity("GLW.Models.GolfRound", b =>
+            modelBuilder.Entity("Models.GolfRound", b =>
                 {
                     b.HasOne("GolfCourse", "GolfCourse")
                         .WithMany()
@@ -2467,7 +2467,7 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GLW.Models.League", "League")
+                    b.HasOne("Models.League", "League")
                         .WithMany()
                         .HasForeignKey("LId")
                         .OnDelete(DeleteBehavior.Cascade)

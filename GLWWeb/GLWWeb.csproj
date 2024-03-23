@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationInsightsResourceId>/subscriptions/e4f1abdf-d5ef-4f3d-a67c-09182ee617bf/resourceGroups/TropicBayGolf/providers/microsoft.insights/components/TropicBayGolf</ApplicationInsightsResourceId>
+    <ApplicationInsightsResourceId>/subscriptions/e4f1abdf-d5ef-4f3d-a67c-09182ee617bf/resourceGroups/GolfLeagueWizard/providers/microsoft.insights/components/GolfLeagueWizard</ApplicationInsightsResourceId>
     <UserSecretsId>4b577384-97dd-496c-9ce5-54c19cf281b3</UserSecretsId>
   </PropertyGroup>
 
