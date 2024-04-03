@@ -15,7 +15,9 @@ namespace Utility
         }
 
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
-        {
+        /// <summary>
+        /// {
+        /// </summary>
             //logic to send email
 
             var client = new SendGridClient(SendGridSecret);
