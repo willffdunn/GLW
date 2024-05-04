@@ -85,8 +85,8 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
             public int? LId { get; set; }
-            public string LeagueName { get; set; }
-
+            //
+            public string? LeagueName { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> LeagueList { get; set; }
 
@@ -100,6 +100,7 @@ namespace GLWWeb.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
+            
             returnUrl ??= Url.Content("~/");
 
             // Clear the existing external cookie to ensure a clean login process

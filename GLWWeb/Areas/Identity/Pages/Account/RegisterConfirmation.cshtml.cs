@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Models;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Web.Http;
+using Utility;
 
 namespace GLWWeb.Areas.Identity.Pages.Account
 {
@@ -18,12 +20,13 @@ namespace GLWWeb.Areas.Identity.Pages.Account
     public class RegisterConfirmationModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _sender;
+        private readonly IEmailSender _emailSender;
+
 
         public RegisterConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender sender)
         {
             _userManager = userManager;
-            _sender = sender;
+            _emailSender = sender;
         }
 
         /// <summary>
@@ -71,9 +74,17 @@ namespace GLWWeb.Areas.Identity.Pages.Account
                     pageHandler: null,
                     values: new { area = "Identity", userId, code, returnUrl },
                     protocol: Request.Scheme);
+                    await _emailSender.SendEmailAsync(
+                    Email,
+                    "Confirm your email",
+                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(EmailConfirmationUrl)}'>clicking here</a>.");
+
+                ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+
             }
 
             return Page();
+
         }
     }
 }

@@ -122,6 +122,7 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             public string PostalCode { get; set; }
             public string PhoneNumber { get; set; }
             public int? LId { get; set; }
+            public string LeagueName { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> LeagueList { get; set; }
 
@@ -156,7 +157,11 @@ namespace GLWWeb.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                user.FirstName = Input.FName; 
+                user.LastName = Input.LName;
+                user.Email = Input.Email;
                 user.Street = Input.Street;
+                user.City = Input.City;
                 user.Name = Input.Name;
                 user.State = Input.State;
                 user.PostalCode = Input.PostalCode;
@@ -229,6 +234,10 @@ namespace GLWWeb.Areas.Identity.Pages.Account
                 {
                     LeagueListVM leagueListVM = new LeagueListVM();
                     League league = lList.Where(u => u.LId == lM.LId).FirstOrDefault();
+                    leagueListVM.FirstName = lM.FirstName;
+                    leagueListVM.LastName = lM.LastName;
+                    leagueListVM.Registered = lM.Registered;
+                    leagueListVM.PhoneNumber = lM.PhoneNumber;
                     leagueListVM.LId = lM.LId;
                     leagueListVM.LeagueName = league.LeagueName;
                     leagueListVMs.Add(leagueListVM);

@@ -1,0 +1,15 @@
+﻿@page
+@model SelectLeagueModel
+
+<form method="post">
+
+    <select name="SelectedLeagueId" class="form-control">
+        <option value="">Select a League</option>
+        @foreach (var league in Model.Input.LeagueListVMs)
+        {
+            <option value="@league.LId">@league.LeagueName</option>
+        }
+    </select>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

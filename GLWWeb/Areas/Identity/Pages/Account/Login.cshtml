@@ -25,33 +25,6 @@
         <br />
         <div class="row" style="margin-left: 260px">
             <div class="col-6" >
-                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                    <div>
-                        <p>
-                            @foreach (var provider in Model.ExternalLogins!)
-                            {
-
-                                @if (provider.Name == "Facebook")
-                                {
-                                    <button type="submit" class="w-100 btn btn-lg btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
-                                        <i class="fab fa-facebook-square fa-3x"></i> @provider.DisplayName Sign in
-                                    </button>
-                                }
-                                <br />
-                                @if (provider.Name == "Google")
-                                {
-                                    <button type="submit" class="w-100 btn btn-lg btn-primary" style="background-color: white; color: black;" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
-                                        <img src="~/googlesm.jpg" style="height:40px; margin-left: 0px; margin-bottom: 0px ">  @provider.DisplayName Sign in
-                                    </button>
-                                }
-                            }
-                        </p>
-                    </div>
-                </form>
-                <div class="separator">
-                    <hr>
-                    <span class="or">or</span>
-                </div>
                 <form id="account" method="post" style="text-align: center">
                     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                     <div class="form-floating mb-3">
@@ -94,39 +67,84 @@
                         </p>
                     </div>
                 </form>
+                <div class="separator">
+                    <hr>
+                    <span class="or">or</span>
+                </div>
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                    <div>
+                        <p>
+                            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                            <div class="form-floating mb-3">
+                                <input type="hidden" asp-for="Input.UserName" />
+                                <input type="hidden" id="SelectedLeagueName" name="SelectedLeagueName" />
+                                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                                <label asp-for="Input.Email" class="form-label">Email</label>
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="hidden" asp-for="Input.LId" />
+                                <input disabled asp-for="Input.LeagueName" class="form-control" aria-required="true" placeholder="name@example.com" />
+                                <label asp-for="Input.LeagueName" class="ms-2 text-muted">Golf League</label>
+                                <span asp-validation-for="Input.LeagueName" class="text-danger"></span>
+                            </div>
+                            @foreach (var provider in Model.ExternalLogins!)
+                            {
+                                <input type="hidden" asp-for="Input.LId" />
+                                @if (provider.Name == "Facebook")
+                                {
+                                    <button type="submit" class="w-100 btn btn-lg btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                        <i class="fab fa-facebook-square fa-3x"></i> @provider.DisplayName Sign in
+                                    </button>
+                                }
+                                <br />
+                                @if (provider.Name == "Google")
+                                {
+                                    <button type="submit" class="w-100 btn btn-lg btn-primary" style="background-color: white; color: black;" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                        <img src="~/googlesm.jpg" style="height:40px; margin-left: 0px; margin-bottom: 0px ">  @provider.DisplayName Sign in
+                                    </button>
+                                }
+                            }
+                        </p>
+                    </div>
+                </form>
         </div>
         </div>
     </div>
 </div>
-    <!-- Modal -->
-    <div class="modal fade" id="leaguesModal" tabindex="-1" aria-labelledby="leaguesModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="leaguesModalLabel">Select Golf League</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Please select a golf league:</p>
-                    <select id="leagueSelect" class="form-select">
-                        <!-- Leagues will be dynamically populated here -->
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="selectLeagueBtn">Select</button>
-                </div>
+<!-- Modal -->
+<div class="modal fade" id="leaguesModal" tabindex="-1" aria-labelledby="leaguesModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="leaguesModalLabel">Select Golf League</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Please select a golf league:</p>
+                <select id="leagueSelect" class="form-select">
+                    <!-- Leagues will be dynamically populated here -->
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <!-- Modify data-form-id attribute based on which form invokes the modal -->
+                <button type="button" class="btn btn-primary" id="selectLeagueBtn" data-form-id="">Select</button>
             </div>
         </div>
     </div>
+</div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
         'use strict';
+
         $(document).ready(function () {
-            $('#Input_Email').blur(function () {
-                var userEmail = $('#Input_Email').val();
+            // Function to handle the form submission for both account and external-account forms
+            function handleFormSubmission(formId) {
+                var userEmail = $('#' + formId + ' input[name="Input.Email"]').val();
                 $.ajax({
                     url: '/Identity/Account/Login?handler=GolfLeagues',
                     method: 'GET',
@@ -134,6 +152,8 @@
                     success: function (data) {
                         // If there are more than one leagues, show the modal
                         if (data.length > 1) {
+                            // Set data-form-id attribute to the current formId
+                            $('#leaguesModal #selectLeagueBtn').attr('data-form-id', formId);
                             $('#leaguesModal').modal('show');
 
                             // Populate the select with retrieved golf leagues in the modal
@@ -147,41 +167,46 @@
                             });
                         } else if (data.length === 1) {
                             // If only one league is associated, populate the league field directly
-                            $('#Input_LeagueName').val(data[0].leagueName);
-                            $('#Input_LId').val(data[0].lId);
+                            $('#' + formId + ' #Input_LeagueName').val(data[0].leagueName);
+                            $('#' + formId + ' #Input_LId').val(data[0].lId);
                         }
                     },
                     error: function (error) {
                         console.error('Error loading golf leagues:', error);
                     }
                 });
+            }
+
+
+            // Event handler for the blur event of the email field in both forms
+            $('#account #Input_Email').blur(function () {
+                handleFormSubmission('account');
             });
 
-            $(document).ready(function () {
-                // Event handler for the "Select" button
-                $('#selectLeagueBtn').click(function () {
-                    // Retrieve the selected league ID from the dropdown
-                    var selectedLeagueId = $('#leagueSelect').val();
-
-                    // Retrieve the selected league name from the dropdown
-                    var selectedLeagueName = $('#leagueSelect option:selected').text();
-
-                    // Set the selected league name & Id in the desired field
-                    $('#Input_LeagueName').val(selectedLeagueName);
-                    $('#Input_LId').val(selectedLeagueId);
-                    $('#SelectedLeagueName').val(selectedLeagueName);
-                    // Close the modal
-                    $('#leaguesModal').modal('hide');
-                });
+            $('#external-account #Input_Email').blur(function () {
+                handleFormSubmission('external-account');
             });
 
-        });
+            // Event handler for the "Select" button
+            $('#selectLeagueBtn').click(function () {
+                // Retrieve the formId from the data attribute of the button
+                var formId = $(this).data('form-id');
 
-        $('#selectLeagueBtn').click(function () {
-            var selectedLeague = $('#leagueSelect').val();
-            $('#Input_LId').val(selectedLeague);
-            $('#leaguesModal').modal('hide');
+                // Retrieve the selected league ID from the dropdown
+                var selectedLeagueId = $('#leagueSelect').val();
+
+                // Retrieve the selected league name from the dropdown
+                var selectedLeagueName = $('#leagueSelect option:selected').text();
+
+                // Set the selected league name & Id in the desired field
+                $('#' + formId + ' #Input_LeagueName').val(selectedLeagueName);
+                $('#' + formId + ' #Input_LId').val(selectedLeagueId);
+                $('#SelectedLeagueName').val(selectedLeagueName);
+                // Close the modal
+                $('#leaguesModal').modal('hide');
+            });
         });
     </script>
-
 }
+
+

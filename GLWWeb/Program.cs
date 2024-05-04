@@ -30,8 +30,11 @@ builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLoca
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.User.RequireUniqueEmail = false;
-    
-    }
+    options.SignIn.RequireConfirmedEmail = true;
+    options.SignIn.RequireConfirmedAccount = true;
+
+
+}
 ).AddEntityFrameworkStores<ApplicationDBContext>().AddDefaultTokenProviders();
 builder.Services.AddAuthentication()
     .AddFacebook(facebookoptions =>

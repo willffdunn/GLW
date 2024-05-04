@@ -14,8 +14,8 @@ namespace Models
         public int LId { get; set; }
         public string LeagueName { get; set; }
         public int MemberId { get; set; }
-        [Required]
         public string LastName { get; set; }
+        public bool Registered { get; set; }
         public string FirstName { get; set; }
         [RegularExpression(@"^\(?\d{3}\)?[-.]?\d{3}[-.]?\d{4}$",
             ErrorMessage = "Invalid phone number.")]

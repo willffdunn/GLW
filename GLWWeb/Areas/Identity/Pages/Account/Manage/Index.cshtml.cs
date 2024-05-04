@@ -86,7 +86,7 @@ namespace GLWWeb.Areas.Identity.Pages.Account.Manage
 
             Input.FirstName = appUser.FirstName;
             Input.LastName = appUser.LastName;
-            Input.Email = appUser.Email;
+            Input.Email = appUser.UserName;
             Input.EmailConfirmed = appUser.EmailConfirmed;
             Input.PhoneNumber = phoneNumber;
             Input.Street = appUser.Street;

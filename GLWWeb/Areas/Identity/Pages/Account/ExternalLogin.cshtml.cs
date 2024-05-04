@@ -7,7 +7,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Web.Http;
-using DataAccess.Repository;
 using DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -15,9 +14,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.DotNet.Scaffolding.Shared;
 using Models;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using Newtonsoft.Json;
+using NuGet.LibraryModel;
+using Utility;
 namespace GLWWeb.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
@@ -90,21 +90,70 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+            public int? LId { get; set; }
+            public LeagueListVM LeagueListVM { get; set; }
+            public int? SelectedLeagueId { get; set; }
         }
 
-        public IActionResult OnGet() => RedirectToPage("./Login");
+        public IActionResult OnGet()
+        {
+            // Optionally, perform any necessary logic here before rendering the view
 
+            return Page(); // Return the view associated with this page
+        }
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
-            // Request a redirect to the external login provider.
-            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-            return new ChallengeResult(provider, properties);
+
+           if (ModelState.IsValid)
+            {
+                // Store the input in TempData to pass it to the callback page
+                TempData["Input"] = JsonConvert.SerializeObject(Input);
+
+                // Request a redirect to the external login provider.
+                var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl, ModelState });
+                var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+                return new ChallengeResult(provider, properties);
+            }
+            else
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                TempData["Info"] = "Email is required";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+
+
         }
-
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
-
         {
+            // Retrieve the input from TempData
+            var inputJson = TempData["Input"] as string;
+            if (string.IsNullOrEmpty(inputJson))
+            {
+                ErrorMessage = "Input data not found.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            // Deserialize the input
+            Input = JsonConvert.DeserializeObject<InputModel>(inputJson);
+            if (Input == null)
+            {
+                ErrorMessage = "Failed to deserialize input data.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            // Use the input as needed
+            int? LId = Input.LId;
+            if (LId == null || LId == 0)
+            {
+                ErrorMessage = "League Id is null or 0.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
+            // Use the email provided in the login page
+            var email = Input.Email;
+            if (string.IsNullOrEmpty(email))
+            {
+                ErrorMessage = "Email not provided.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
 
             returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
@@ -116,68 +165,75 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
+            // Find the user by email address
+            var user = await _userManager.FindByNameAsync(email);
+            if (user == null)
+            {
+                ErrorMessage = "User not found.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            }
+
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 ErrorMessage = "Error loading external login information.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
-            // Get the email address from the external provider's claims
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            if (email == null)
+            var claimsEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
+            if (claimsEmail == null)
             {
                 ErrorMessage = "Email claim not found.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
-            // Find the user by email address
-            var user = await _userManager.FindByNameAsync(email);
-            if (user != null)
+            if (claimsEmail != email)
             {
-                var existingLogin = await _userManager.FindByLoginAsync(info.LoginProvider, user.Id);
-                if (existingLogin == null)
-                {
-                    await _userManager.AddLoginAsync(user, info);
-                }
-                // Sign in the user with this external login provider if the user already has a login.
-                var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
-
-                    if (!result.Succeeded)
-                    {
-                        ErrorMessage = "The external login was not added. External logins can only be associated with one account.";
-                        return RedirectToPage();
-                    }
-
-                    // Clear the existing external cookie to ensure a clean login process
-                    await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
-                    return LocalRedirect(returnUrl);
-                }
-                if (result.IsLockedOut)
-                {
-                    return RedirectToPage("./Lockout");
-                }
-                ErrorMessage = "The external login was not added";
-                return RedirectToPage();
-            }
-            else
-            {
-                Member member = _unitOfWork.Member.Get(u => u.Email == email);
-                if (member != null)
-                {
-                    TempData["Info"] = "Member is not registered with league";
-                    return RedirectToPage("./Register");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
-                }
-
+                ErrorMessage = "Input email does not match browser session email.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
+            // Find the external login for the user
+            var existingLogin = await _userManager.FindByLoginAsync(info.LoginProvider, user.Id);
+            if (existingLogin == null)
+            {
+                await _userManager.AddLoginAsync(user, info);
+            }
+
+            // Get the league details
+            LeagueListVM leagueListVM = await GetGolfLeague((int)LId, email);
+
+            // Set the necessary data
+            SD.LeagueId = leagueListVM.LId;
+            SD.LeagueName = leagueListVM.LeagueName;
+            SD.UserFirstName = leagueListVM.FirstName;
+            SD.UserLastName = leagueListVM.LastName;
+            SD.Email = email;
+
+            // Sign in the user
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+
+                if (!result.Succeeded)
+                {
+                    ErrorMessage = "The external login was not added. External logins can only be associated with one account.";
+                    return RedirectToPage();
+                }
+
+                // Clear the existing external cookie to ensure a clean login process
+                await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+                return LocalRedirect(returnUrl);
+            }
+
+            if (result.IsLockedOut)
+            {
+                return RedirectToPage("./Lockout");
+            }
+
+            ErrorMessage = "The external login was not added";
+            return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
@@ -237,6 +293,20 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             ProviderDisplayName = info.ProviderDisplayName;
             ReturnUrl = returnUrl;
             return Page();
+        }
+
+        public async Task<LeagueListVM> GetGolfLeague(int LId, string email)
+        {
+            League league = _unitOfWork.League.Get(p => p.LId == LId);
+            Member lM = _unitOfWork.Member.Get(p => p.Email == email & p.LId == LId);
+            LeagueListVM leagueListVM = new LeagueListVM();
+            leagueListVM.FirstName = lM.FirstName;
+            leagueListVM.LastName = lM.LastName;
+            leagueListVM.Registered = lM.Registered;
+            leagueListVM.PhoneNumber = lM.PhoneNumber;
+            leagueListVM.LId = lM.LId;
+            leagueListVM.LeagueName = league.LeagueName;
+            return leagueListVM;
         }
 
         private ApplicationUser CreateUser()
