@@ -18,7 +18,7 @@ public class SmsSender : ISmsSender
     {
         _configuration = configuration;
         var accountSid = _configuration["Twilio:AccountSID"];
-        var authToken = _configuration["Twilio:AuthToken"];
+        var authToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
         TwilioClient.Init(accountSid, authToken);
     }
 
