@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Models;
+using Utility;
+
 
 namespace GLWWeb.Areas.Identity.Pages.Account.Manage
 {
@@ -63,7 +65,8 @@ namespace GLWWeb.Areas.Identity.Pages.Account.Manage
             [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$",
                 ErrorMessage = "Invalid email address.")]
             public string Email { get; set; }
-            public bool EmailConfirmed { get; set; }
+            public string EmailConfirmed { get; set; }
+            public string PhoneConfirmed { get; set; }
             [Phone]
             [RegularExpression(@"^\(?\d{3}\)?[-.]?\d{3}[-.]?\d{4}$",
                 ErrorMessage = "Invalid phone number.")]
@@ -73,6 +76,13 @@ namespace GLWWeb.Areas.Identity.Pages.Account.Manage
             public string City { get; set; }
             public string State { get; set; }
             public string PostalCode { get; set; }
+            public bool Registered { get; set; }
+            public string PreferredNotification { get; set; }
+            public string MemberStatus { get; set; }
+            public string MemberPlan { get; set; }
+            public string MemberType { get; set; }
+            public string MemberTee { get; set; }
+
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -81,20 +91,40 @@ namespace GLWWeb.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var currentUser = await _userManager.GetUserAsync(User);
             ApplicationUser appUser = currentUser;
+            Member member = _unitOfWork.Member.Get(u => u.Email == SD.Email & u.LId == SD.LeagueId);
             Username = userName;
             Input = new InputModel();
-
             Input.FirstName = appUser.FirstName;
             Input.LastName = appUser.LastName;
             Input.Email = appUser.UserName;
-            Input.EmailConfirmed = appUser.EmailConfirmed;
+            if (appUser.EmailConfirmed == true)
+            {
+                Input.EmailConfirmed = "Yes";
+            }
+            else
+            {
+                Input.EmailConfirmed = "No";
+            }
+            if (appUser.PhoneNumberConfirmed == true)
+            {
+                Input.PhoneConfirmed = "Yes";
+            }
+            else
+            {
+                Input.PhoneConfirmed = "No";
+            }
             Input.PhoneNumber = phoneNumber;
             Input.Street = appUser.Street;
             Input.City = appUser.City;
             Input.State = appUser.State;
             Input.PostalCode = appUser.PostalCode;
-        }
+ //         Input.MemberPlan = member.MemberPlan;
+            Input.MemberType = member.MemberType;
+            Input.MemberTee = member.MemberTee;
+            Input.MemberStatus = member.MemberStatus;
+            Input.PreferredNotification = member.PreferredNotification;
 
+        }
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -122,30 +152,57 @@ namespace GLWWeb.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
+
+            user.Street = Input.Street;
+            user.City = Input.City;
+            user.State = Input.State;
+            user.PostalCode = Input.PostalCode;
+            user.PhoneNumber = Input.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
             {
-                user.Street = Input.Street;
-                user.City = Input.City;
-                user.State = Input.State;
-                user.PostalCode = Input.PostalCode;
-                user.PhoneNumber = Input.PhoneNumber;
 
-                var result = await _userManager.UpdateAsync(user);
+                Member member = _unitOfWork.Member.Get(u => u.Email == SD.Email & u.LId == SD.LeagueId);
 
-                if (result.Succeeded)
+                member.FirstName = Input.FirstName;
+                member.LastName = Input.LastName;
+                member.PhoneNumber = Input.PhoneNumber;
+                member.PreferredNotification = Input.PreferredNotification;
+                member.MemberTee = Input.MemberTee;
+                member.MemberType = Input.MemberType;
+                member.MemberStatus = Input.MemberStatus;
+                member.FullName = Input.FirstName + " " + Input.LastName;
+                _unitOfWork.Member.Update(member);
+                _unitOfWork.Save();
+
+                Input.MemberPlan = member.MemberPlan;
+                if (user.EmailConfirmed == true)
                 {
-                    await _signInManager.RefreshSignInAsync(user);
-                    StatusMessage = "Your profile has been updated";
-                    TempData["info"] = "Your profile has been updated";
-
-                    return RedirectToPage();
+                    Input.EmailConfirmed = "Yes";
                 }
-                foreach (var error in result.Errors)
+                else
                 {
-                    TempData["info"] = "Update failed - Invalid Post";
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    Input.EmailConfirmed = "No";
                 }
+                if (user.PhoneNumberConfirmed == true)
+                {
+                    Input.PhoneConfirmed = "Yes";
+                }
+                else
+                {
+                    Input.PhoneConfirmed = "No";
+                }
+                await _signInManager.RefreshSignInAsync(user);
+                TempData["info"] = "Your profile has been updated";
+
+                return RedirectToPage();
+            }
+            foreach (var error in result.Errors)
+            {
+                TempData["info"] = "Update failed - Invalid Post";
+                ModelState.AddModelError(string.Empty, error.Description);
             }
 
             // If we got this far, something failed, redisplay form

@@ -7,8 +7,19 @@ using Utility;
 using DataAccess.DBInitializer;
 using Models;
 using GLW.DataAccess.Data;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/GolfLeagueWizard.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog(); // Use Serilog for logging
 
 // Add services to the container.
 builder.Services.AddDistributedMemoryCache();
@@ -17,7 +28,6 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(100);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
-
 });
 
 builder.Services.AddControllersWithViews();
@@ -32,29 +42,28 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.User.RequireUniqueEmail = false;
     options.SignIn.RequireConfirmedEmail = true;
     options.SignIn.RequireConfirmedAccount = true;
+})
+.AddEntityFrameworkStores<ApplicationDBContext>()
+.AddDefaultTokenProviders();
 
-
-}
-).AddEntityFrameworkStores<ApplicationDBContext>().AddDefaultTokenProviders();
 builder.Services.AddAuthentication()
-    .AddFacebook(facebookoptions =>
+    .AddFacebook(facebookOptions =>
     {
-        facebookoptions.AppId = builder.Configuration.GetSection("FacebookAuthSettings").GetValue<string>("AppId");
-        facebookoptions.AppSecret = builder.Configuration.GetSection("FacebookAuthSettings").GetValue<string>("AppSecret");
-    });
-builder.Services.AddAuthentication()
-    .AddGoogle(googleoptions =>
+        facebookOptions.AppId = builder.Configuration.GetSection("FacebookAuthSettings").GetValue<string>("AppId");
+        facebookOptions.AppSecret = builder.Configuration.GetSection("FacebookAuthSettings").GetValue<string>("AppSecret");
+    })
+    .AddGoogle(googleOptions =>
     {
-        googleoptions.ClientId = builder.Configuration.GetSection("GoogleAuthSettings").GetValue<string>("ClientId");
-        googleoptions.ClientSecret = builder.Configuration.GetSection("GoogleAuthSettings").GetValue<string>("ClientSecret");
+        googleOptions.ClientId = builder.Configuration.GetSection("GoogleAuthSettings").GetValue<string>("ClientId");
+        googleOptions.ClientSecret = builder.Configuration.GetSection("GoogleAuthSettings").GetValue<string>("ClientSecret");
     });
 
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<ISmsSender, SmsSender>();
 builder.Services.AddScoped<IDBInitializer, DbInitializer>();
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
-
 
 var app = builder.Build();
 
@@ -62,24 +71,12 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-//string accountSid = "AC37f20763ac3b293f908e1e0290b3dcd1";
-//string authToken = "c4937d899e21f3e4df66b1d65c91eccb";
 
-//TwilioClient.Init(accountSid, authToken);
-
-//var message = MessageResource.Create(
-//  body: "This is the ship that made the Kessel Run in fourteen parsecs?",
-//from: new Twilio.Types.PhoneNumber("+18445130861"),
-//to: new Twilio.Types.PhoneNumber("+14848857000")
-//);
-
-//Console.WriteLine(message.Sid);
 app.UseHttpsRedirection();
+app.UseDefaultFiles();
 app.UseStaticFiles();
-
 app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
@@ -91,6 +88,7 @@ app.MapControllerRoute(
     pattern: "{area=Admin}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
 void SeedDatabase()
 {
     using (var scope = app.Services.CreateScope())
@@ -99,3 +97,6 @@ void SeedDatabase()
         dbInitializer.Initialize();
     }
 }
+
+// Ensure to flush and close the Serilog logger properly on application shutdown
+app.Lifetime.ApplicationStopped.Register(Log.CloseAndFlush);

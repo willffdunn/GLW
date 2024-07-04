@@ -108,7 +108,7 @@ namespace GLWWeb.Areas.Admin.Controllers
                 member.MemberStatus = "Active";
                 member.Registered = true;
                 member.PreferredNotification = "Both";
-                member.EmailConfirmed = false;
+                member.MemberPlan = "League Admin";
                 member.FullName = bLeague.LContactFName + " " + bLeague.LContactLName;
                 member.Handicap = 0;
                 member.MemberTee = "Black";

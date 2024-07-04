@@ -24,11 +24,9 @@
                         <input asp-for="PhoneNumber" class="form-divided" placeholder="Phone Number" />
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
 
-                        <Label>Email Confirmed</Label>
-                        <select asp-for="EmailConfirmed" class="form-divided">
-                            <option value="False">False</option>
-                            <option value="True">True</option>
-                        </select>
+                        <Label>Member Plan</Label>
+                        <input asp-for="MemberPlan" disabled class="form-divided" placeholder="Member Plan" />
+                        <span asp-validation-for="MemberPlan" class="text-danger"></span>
                     </li>
                     <br />
                     <li>
@@ -62,10 +60,8 @@
                         <Label>Member Type</Label>
                         <select asp-for="MemberType" class="form-divided">
                             <option value="">-----</option>
-                            <option value="TBRes">TB Resident Golfer</option>
-                            <option value="NRes">Non Resident Golfer</option>
-                            <option value="TBSoc">TB Resident Social </option>
-                            <option value="NSoc">Non Resident Social </option>
+                            <option value="Golfer">Golfer</option>
+                            <option value="Social">Social</option>
                         </select>
 
                         <Label>Handicap</Label>

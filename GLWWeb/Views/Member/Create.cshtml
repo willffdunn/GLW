@@ -28,11 +28,10 @@
                     </li>
                     <br/>
                     <li>
-                        <Label>Email Confirmed</Label>
-                        <select asp-for="EmailConfirmed" class="form-divided">
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
+                        <Label>Member Plan</Label>
+                        <input asp-for="MemberPlan" disabled class="form-divided" placeholder="Member Plan" />
+                        <span asp-validation-for="MemberPlan" class="text-danger"></span>
+
                     </li>
                     <li>
                         <Label>Member Status</Label>

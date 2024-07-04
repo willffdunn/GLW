@@ -348,10 +348,10 @@ namespace DataAccess.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     Registered = table.Column<bool>(type: "bit", nullable: false),
                     PreferredNotification = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MemberStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MemberPlan = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MemberType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MemberTee = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -580,11 +580,11 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Members",
-                columns: new[] { "MemberId", "Email", "EmailConfirmed", "FirstName", "FullName", "Handicap", "LId", "LastName", "MemberStatus", "MemberTee", "MemberType", "PhoneNumber", "PreferredNotification", "Registered" },
+                columns: new[] { "MemberId", "Email", "FirstName", "FullName", "Handicap", "LId", "LastName", "MemberPlan", "MemberStatus", "MemberTee", "MemberType", "PhoneNumber", "PreferredNotification", "Registered" },
                 values: new object[,]
                 {
-                    { 1, "willffdunn@gmail.com", false, "William", "William Dunn", 9, 1, "Dunn", "Active", "White", "TBRes", "484-885-7000", "Both", false },
-                    { 2, "karenfdunn@gmail.com", false, "Karen", "Karen Dunn", 19, 1, "Dunn", "Active", "Red", "TBRes", "610-733-38380", "Both", false }
+                    { 1, "willffdunn@gmail.com", "William", "William Dunn", 9, 1, "Dunn", "Admin", "Active", "White", "Golfer", "484-885-7000", "Both", false },
+                    { 2, "karenfdunn@gmail.com", "Karen", "Karen Dunn", 19, 1, "Dunn", "Admin", "Active", "Red", "Social", "610-733-38380", "Both", false }
                 });
 
             migrationBuilder.InsertData(

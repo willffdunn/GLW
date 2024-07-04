@@ -23,4 +23,9 @@ body {
     font-weight:800;
     
 }
+.footer-link {
+    text-decoration: none; /* Remove underline */
+    color: floralwhite /* Set text color to white */
+}
+
 

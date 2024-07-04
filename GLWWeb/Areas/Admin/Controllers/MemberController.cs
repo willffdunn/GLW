@@ -34,8 +34,10 @@ namespace GLWWeb.Areas.Admin.Controllers
         }
         [HttpPost]
         public IActionResult Create(Member obj)
+
         {
 
+            obj.MemberPlan = "Not Registered";
             obj.LId = SD.LeagueId;
 
             Member _obj = _unitOfWork.Member.Get(u => u.FullName == obj.FullName &
@@ -89,7 +91,7 @@ namespace GLWWeb.Areas.Admin.Controllers
                 return View("Edit");
             }
             {
-                obj.FullName = obj.FirstName + obj.LastName;
+                obj.FullName = obj.FirstName + " " + obj.LastName;
                 _unitOfWork.Member.Update(obj);
                 _unitOfWork.Save();
                 TempData["Success"] = "Member data edited successfully";

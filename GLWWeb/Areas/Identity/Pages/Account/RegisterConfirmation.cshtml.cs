@@ -1,90 +1,90 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
-using GLWWeb.Areas.Identity.Pages.Account;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Models;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Web.Http;
-using Utility;
 
 namespace GLWWeb.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
     public class RegisterConfirmationModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ILogger<RegisterConfirmationModel> _logger;
 
-
-        public RegisterConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender sender)
+        public RegisterConfirmationModel(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            ILogger<RegisterConfirmationModel> logger)
         {
             _userManager = userManager;
-            _emailSender = sender;
+            _signInManager = signInManager;
+            _logger = logger;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public string Email { get; set; }
+        [BindProperty]
+        public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public bool DisplayConfirmAccountLink { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public string EmailConfirmationUrl { get; set; }
-
-        public async Task<IActionResult> OnGetAsync(string email, string returnUrl = null)
+        public class InputModel
         {
-            if (email == null)
+            [Required]
+            [EmailAddress]
+            public string Email { get; set; }
+
+            [Required]
+            [Display(Name = "Verification Code")]
+            public string SmsVerificationCode { get; set; }
+        }
+
+        public void OnGet(string email = null)
+        {
+            Input = new();
+            Input = new InputModel
             {
-                return RedirectToPage("/Index");
+                Email = email
+            };
+        }
+
+        public async Task<IActionResult> OnPostVerifyPhoneNumberAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
             }
-            returnUrl = returnUrl ?? Url.Content("~/");
-
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
+            ApplicationUser au = await _userManager.FindByEmailAsync(Input.Email);
+            if (au == null)
             {
-                return NotFound($"Unable to load user with email '{email}'.");
+                ModelState.AddModelError(string.Empty, "Invalid user ID.");
+                return Page();
             }
 
-            Email = email;
-            // Once you add a real email sender, you should remove this code that lets you confirm the account
-            DisplayConfirmAccountLink = true;
-            if (DisplayConfirmAccountLink)
+            var expectedCode = Input.SmsVerificationCode?.ToString();
+            if (expectedCode == Input.SmsVerificationCode)
             {
-                var userId = await _userManager.GetUserIdAsync(user);
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                EmailConfirmationUrl = Url.Page(
-                    "/Account/ConfirmEmail",
-                    pageHandler: null,
-                    values: new { area = "Identity", userId, code, returnUrl },
-                    protocol: Request.Scheme);
-                    await _emailSender.SendEmailAsync(
-                    Email,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(EmailConfirmationUrl)}'>clicking here</a>.");
+                au.PhoneNumberConfirmed = true;
+                var result = await _userManager.UpdateAsync(au);
 
-                ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
-
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(au, isPersistent: false);
+                    return RedirectToPage("RegisterConfirmationSuccess");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Invalid verification code.");
             }
 
             return Page();
-
         }
     }
 }

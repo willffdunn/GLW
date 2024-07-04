@@ -21,6 +21,7 @@ namespace Utility
         public static string UserFirstName { get; set; }
         public static string UserLastName { get; set; }
         public static string Email { get; set; }
+        public static string MemberPlan { get; set; }
 
     }
 }

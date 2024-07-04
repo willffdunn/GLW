@@ -1,5 +1,8 @@
 ﻿@page
-@model ResendEmailConfirmationModel
+@model GLWWeb.Areas.Identity.Pages.Account.SendPhoneConfirmationModel
+@{
+    ViewData["Title"] = "Send Phone Confirmation Code";
+}
 
 <div class="container" style="width: 100%;">
     <style>
@@ -48,19 +51,31 @@
 
     <div class="row pt-2 pb-1" style="margin-top: -50px;">
         <div class="col-12" style="text-align: center;">
-            <h3 class="text-primary">Send Email Confirmation</h3>
-            <h4 class="text-primary">Enter Email</h4>
+            <h3 class="text-primary">@ViewData["Title"]</h3>
         </div>
+        @if (Model.StatusMessage != null)
+        {
+            <div class="col-12">
+                <div class="alert alert-success" role="alert">
+                    @Model.StatusMessage
+                </div>
+            </div>
+        }
         <div class="row justify-content-center">
-            <div class="col-12 centered-form" >
+            <div class="col-12 centered-form">
                 <form method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                    <div class="form-floating mb-3" style="width: 380px" >
+                    <div class="form-floating mb-3" style="width: 380px">
                         <input asp-for="Input.Email" class="form-control" aria-required="true" placeholder="Email" />
                         <label asp-for="Input.Email" class="form-label"></label>
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
-                    <button type="submit" class="btn btn-lg btn-primary" style="width: 380px">Send</button>
+                    <div class="form-floating mb-3" style="width: 380px">
+                        <input asp-for="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+                        <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary" style="width: 380px">Send Confirmation Code</button>
                 </form>
             </div>
         </div>

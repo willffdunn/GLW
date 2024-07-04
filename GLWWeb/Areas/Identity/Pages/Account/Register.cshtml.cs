@@ -28,6 +28,7 @@ namespace GLWWeb.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ISmsSender _smsSender;
         private readonly IUnitOfWork _unitOfWork;
 
         public RegisterModel(
@@ -37,6 +38,7 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
+            ISmsSender smsSender,
             IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -47,6 +49,7 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _smsSender = smsSender;
         }
 
         /// <summary>
@@ -125,7 +128,8 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             public string LeagueName { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> LeagueList { get; set; }
-
+            public bool AcceptedConditions { get; set; }
+            public string SmsConsent { get; set; }
         }
 
 
@@ -165,9 +169,7 @@ namespace GLWWeb.Areas.Identity.Pages.Account
                 user.Name = Input.Name;
                 user.State = Input.State;
                 user.PostalCode = Input.PostalCode;
-                user.PhoneNumber = Input.PhoneNumber;
-
-
+                user.PhoneNumber = FormatPhoneNumber(Input.PhoneNumber);
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -196,6 +198,14 @@ namespace GLWWeb.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
+                    // Generate and send SMS verification code
+                   var smsVerificationCode = GenerateVerificationCode();
+                    await _smsSender.SendSmsAsync(user.PhoneNumber, $"Your Golf League Wizard verification code is {smsVerificationCode}");
+
+                    // Store the verification code and user ID temporarily for validation
+                    TempData["SmsVerificationCode"] = smsVerificationCode;
+                    TempData["UserId"] = user.Id;
+
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
@@ -220,6 +230,16 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
+            Input = new()
+            {
+                RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
+                {
+                    Text = i,
+                    Value = i
+                }),
+
+            };
+
             return Page();
         }
         public IActionResult OnGetGolfLeagues(string userEmail)
@@ -260,6 +280,10 @@ namespace GLWWeb.Areas.Identity.Pages.Account
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
+        private string GenerateVerificationCode()
+        {
+            return new Random().Next(1000, 9999).ToString();
+        }
 
         private IUserEmailStore<ApplicationUser> GetEmailStore()
         {
@@ -269,6 +293,25 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<ApplicationUser>)_userStore;
         }
+        public static string FormatPhoneNumber(string phoneNumber)
+        {
+            if (string.IsNullOrEmpty(phoneNumber))
+                return null;
+
+            // Remove all non-numeric characters
+            var digitsOnly = new string(phoneNumber.Where(char.IsDigit).ToArray());
+
+            // Assuming a standard format: E.164 (e.g., +1234567890)
+            // This is a simple example, you might want to add more complex logic for different formats.
+            if (digitsOnly.Length == 10)
+            {
+                // Assuming a US phone number without country code, e.g., 1234567890
+                return "+1" + digitsOnly;
+            }
+
+            return digitsOnly;
+        }
+
     }
 }
 

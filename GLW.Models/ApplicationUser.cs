@@ -15,11 +15,6 @@ namespace Models
             get { return FirstName + " " + LastName; }
             set { }
         }
-
-        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-            ErrorMessage = "Invalid email address.")]
-        public string Email { get; set; }
-        public bool EmailConfirmed { get; set; }
         public string? Street { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }

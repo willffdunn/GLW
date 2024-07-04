@@ -1,0 +1,103 @@
+﻿@page
+@model SelectMemberPlanModel
+@{
+    ViewData["Title"] = "Select Member Plan";
+}
+
+    <title>@ViewData["Title"]</title>
+    <style>
+
+        .plans {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .plan-box {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+        }
+
+            .plan-box h2 {
+                margin-top: 0;
+            }
+
+        .benefits {
+            text-align: left;
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+
+        .price {
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+
+        .select-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            .select-button:hover {
+                background-color: #0056b3;
+            }
+    </style>
+<div class="centered-form" style="margin-top: -40px;">
+    <h3 class="text-primary text-center">Select Member Plan</h3>
+    <hr />    
+    <div class="plans">
+        <!-- Basic Plan -->
+        <div class="plan-box">
+            <h2>Basic</h2>
+            <ul class="benefits">
+                <li>Benefit 1</li>
+                <li>Benefit 2</li>
+                <li>Benefit 3</li>
+                <li>Benefit 4</li>
+                <li>Benefit 5</li>
+            </ul>
+            <div class="price">$9.99/month</div>
+            <button class="select-button">Select</button>
+        </div>
+        <!-- Premium Plan -->
+        <div class="plan-box">
+            <h2>Premium</h2>
+            <ul class="benefits">
+                <li>Benefit 1</li>
+                <li>Benefit 2</li>
+                <li>Benefit 3</li>
+                <li>Benefit 4</li>
+                <li>Benefit 5</li>
+            </ul>
+            <div class="price">$19.99/month</div>
+            <button class="select-button">Select</button>
+        </div>
+        <!-- Premium Plus Plan -->
+        <div class="plan-box">
+            <h2>Premium Plus</h2>
+            <ul class="benefits">
+                <li>Benefit 1</li>
+                <li>Benefit 2</li>
+                <li>Benefit 3</li>
+                <li>Benefit 4</li>
+                <li>Benefit 5</li>
+            </ul>
+            <div class="price">$29.99/month</div>
+            <button class="select-button">Select</button>
+        </div>
+    </div>
+</div>
+
+

@@ -17,7 +17,7 @@
             Member List
          </h3>
         </div>
-        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_League_Admin))
+        @if (User.IsInRole(SD.Role_Admin) || SD.MemberPlan == "LeagueAdmin")
         {
             <div class="col=6 align-text-left">
                 <a asp  asp-controller="Member" asp-action="Create" class="btn btn-primary">
@@ -36,7 +36,7 @@
      <thead style="background-color:lightblue">
 
         <tr >
-        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_League_Admin))
+                    @if (User.IsInRole(SD.Role_Admin) || SD.MemberPlan == "LeagueAdmin")
         {
             <th>
               Edit

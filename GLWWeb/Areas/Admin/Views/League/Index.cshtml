@@ -1,99 +1,65 @@
 ﻿@model List<League>
 
-<div class-"container" style="width:100%">
-    <div class="row pt-2 pb-1">
-        <div class="col=4" style="margin-top: -50px">
-            <h3 class=" text-primary" style="text-align:center">Golf League List</h3>
+<div class="container-fluid" style="width: 100%;">
+    <div class="row pt-2 pb-1 align-items-center" style="margin-top: -50px;">
+        <div class="col-md-6">
+            <h3 class="text-primary text-center">Golf League List</h3>
         </div>
-        <div class="col=6 ">
-            <a asp-controller="League" asp-action="Upsert" class="btn btn-primary">
-                Add a Golf League
+        <div class="col-md-6 text-md-end text-center">
+            <a asp-controller="GolfCourse" asp-action="Upsert" class="btn btn-primary">
+                Add Golf League
                 <i class="bi bi-plus-circle"></i>
             </a>
         </div>
     </div>
 
     <div>
-        <table id ="lTable" class="table table-bordered table-striped ">
-            <thead style="background-color:orange">
-
+        <table id="lTable" class="table table-bordered table-striped">
+            <thead class="bg-warning">
                 <tr>
-                    <th>
-                        League
-                    </th>
-                    <th>
-                        League Name
-                    </th>
-                    <th>
-                        Street
-                    </th>
-                    <th>
-                        City
-                    </th>
-                    <th>
-                        State
-                    </th>
-                    <th>
-                        Zip
-                    </th>
-                    <th>
-                        Phone
-                    </th>
-                    <th>
-                        Delete
-                    </th>
-
+                    <th>Action</th>
+                    <th>League Name</th>
+                    <th>Street</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip</th>
+                    <th>Phone</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
-
                 @foreach (var obj in Model)
                 {
                     <tr>
-                        <th>
-                            <div class="w-50 bntn-group" role="group">
+                        <td>
+                            <div class="btn-group" role="group">
                                 <a asp-controller="League" asp-action="Browse" asp-route-LID="@obj.LId" class="btn btn-primary">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                             </div>
-                        </th>
-                        <th>
+                        </td>
+                        <td>
                             <a href="League/Upsert?GCID=@obj.LId"> @obj.LeagueName </a>
-                        </th>
-                        <th>
-                                @obj.LStreet
-                        </th>
-                        <th>
-                                @obj.LCity
-                        </th>
-                        <th>
-                                @obj.LState
-                        </th>
-                        <th>
-                                @obj.LZip
-                        </th>
-                        <th>
-                                @obj.LContactPhoneNumber
-                        </th>
-                        <th>
-                            <div class="w-50 bntn-group" role="group">
+                        </td>
+                        <td>@obj.LStreet</td>
+                        <td>@obj.LCity</td>
+                        <td>@obj.LState</td>
+                        <td>@obj.LZip</td>
+                        <td>@obj.LContactPhoneNumber</td>
+                        <td>
+                            <div class="btn-group" role="group">
                                 <a asp-controller="League" asp-action="Delete" asp-route-LID="@obj.LId" class="btn btn-danger">
                                     <i class="bi bi-trash-fill"></i>
                                 </a>
                             </div>
-                        </th>
+                        </td>
                     </tr>
-
                 }
-
-
             </tbody>
-
         </table>
-
     </div>
-
 </div>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('#lTable').DataTable();

@@ -1,13 +1,40 @@
 ﻿@page
-@model RegisterConfirmationModel
-@{
-    ViewData["Title"] = "Register confirmation";
-}
+@model GLWWeb.Areas.Identity.Pages.Account.RegisterConfirmationModel
 
-<h1>@ViewData["Title"]</h1>
-<p>
-        Please check your email to confirm your email account.
-        Upon confirmation you will be able to log into your account.
-</p>
-    
-
+<div class="container">
+   <div class="row justify-content-center" style="margin-top: -50px;">
+        <div class="col-md-8 text-center">
+            <h3>Register Confirmation</h3>
+            <br />
+            <p class="text-center">
+                Please check your email to confirm your email account. (Note: The email may be in your Spam folder.)
+                Upon confirmation, you will be able to log into your account.
+            </p>
+            <br />
+            <div class="row justify-content-center">
+                <div class="col-6 centered-form">
+                    <h4 class="text-center">Phone Number Verification</h4>
+                    <p class="text-center">
+                        Please enter the verification code sent to your phone number.
+                    </p>
+                    <br />
+                    <form method="post" asp-page-handler="VerifyPhoneNumber">
+                        <div class="form-group text-center">
+                            <input asp-for="Input.Email" class="form-control" placeholder="Email" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <br />
+                        <div class="form-group text-center">
+                                <input asp-for="Input.SmsVerificationCode" class="form-control" placeholder="Verification Code" />
+                            <span asp-validation-for="Input.SmsVerificationCode" class="text-danger"></span>
+                        </div>
+                        <br />
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Verify</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

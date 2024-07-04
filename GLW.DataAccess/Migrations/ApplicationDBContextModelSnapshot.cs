@@ -1666,9 +1666,6 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1684,6 +1681,10 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MemberPlan")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1721,15 +1722,15 @@ namespace DataAccess.Migrations
                         {
                             MemberId = 1,
                             Email = "willffdunn@gmail.com",
-                            EmailConfirmed = false,
                             FirstName = "William",
                             FullName = "William Dunn",
                             Handicap = 9,
                             LId = 1,
                             LastName = "Dunn",
+                            MemberPlan = "Admin",
                             MemberStatus = "Active",
                             MemberTee = "White",
-                            MemberType = "TBRes",
+                            MemberType = "Golfer",
                             PhoneNumber = "484-885-7000",
                             PreferredNotification = "Both",
                             Registered = false
@@ -1738,15 +1739,15 @@ namespace DataAccess.Migrations
                         {
                             MemberId = 2,
                             Email = "karenfdunn@gmail.com",
-                            EmailConfirmed = false,
                             FirstName = "Karen",
                             FullName = "Karen Dunn",
                             Handicap = 19,
                             LId = 1,
                             LastName = "Dunn",
+                            MemberPlan = "Admin",
                             MemberStatus = "Active",
                             MemberTee = "Red",
-                            MemberType = "TBRes",
+                            MemberType = "Social",
                             PhoneNumber = "610-733-38380",
                             PreferredNotification = "Both",
                             Registered = false

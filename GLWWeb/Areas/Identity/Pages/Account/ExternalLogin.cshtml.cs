@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
 
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
@@ -91,8 +90,6 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             [EmailAddress]
             public string Email { get; set; }
             public int? LId { get; set; }
-            public LeagueListVM LeagueListVM { get; set; }
-            public int? SelectedLeagueId { get; set; }
         }
 
         public IActionResult OnGet()
@@ -104,7 +101,7 @@ namespace GLWWeb.Areas.Identity.Pages.Account
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
 
-           if (ModelState.IsValid)
+          if (ModelState.IsValid)
             {
                 // Store the input in TempData to pass it to the callback page
                 TempData["Input"] = JsonConvert.SerializeObject(Input);
@@ -169,8 +166,9 @@ namespace GLWWeb.Areas.Identity.Pages.Account
             var user = await _userManager.FindByNameAsync(email);
             if (user == null)
             {
-                ErrorMessage = "User not found.";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                ErrorMessage = "Member not registered.";
+                TempData["Info"] = "Member is not registered with league";
+                return RedirectToPage("./Register", new { ReturnUrl = returnUrl });
             }
 
             var info = await _signInManager.GetExternalLoginInfoAsync();
@@ -223,6 +221,13 @@ namespace GLWWeb.Areas.Identity.Pages.Account
 
                 // Clear the existing external cookie to ensure a clean login process
                 await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+                
+                Member member = _unitOfWork.Member.Get(p => p.Email == Input.Email);
+                if (member.Registered != true)
+                {
+                    TempData["Info"] = "Member is not registered with league";
+                    return RedirectToPage("./Register");
+                }
 
                 return LocalRedirect(returnUrl);
             }
@@ -232,8 +237,8 @@ namespace GLWWeb.Areas.Identity.Pages.Account
                 return RedirectToPage("./Lockout");
             }
 
-            ErrorMessage = "The external login was not added";
-            return RedirectToPage();
+            TempData["Info"] = "Member email must be confirmed";
+            return RedirectToPage("/Account/ResendEmailConfirmation");
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)

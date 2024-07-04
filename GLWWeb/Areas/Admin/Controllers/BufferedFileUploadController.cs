@@ -40,10 +40,10 @@ namespace GLWWeb.Areas.Admin.Controllers
                                 member.FirstName = worksheet.Cells[row, 1].Text.TrimEnd();
                                 member.LastName = worksheet.Cells[row, 2].Text.TrimEnd();
                                 member.Email = worksheet.Cells[row, 3].Text.TrimEnd();
+                                member.MemberPlan = "Not Registered";
                                 member.PhoneNumber = worksheet.Cells[row, 4].Text.TrimEnd();
                                 member.MemberStatus = worksheet.Cells[row, 5].Text.TrimEnd();
                                 member.MemberType = worksheet.Cells[row, 6].Text.TrimEnd();
-                                member.EmailConfirmed = true;
                                 member.Handicap = int.Parse(worksheet.Cells[row, 7].Text);
                                 member.PreferredNotification = "Both";
                                 member.FullName = member.FirstName + " " + member.LastName;

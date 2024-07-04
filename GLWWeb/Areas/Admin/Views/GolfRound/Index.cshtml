@@ -2,106 +2,77 @@
 @model List<GolfRound>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<div class-"container" style="width:100%">
-    <div class="row pt-2 pb-1" style="margin-top: -50px">
-        <div class="col=4">
-            <h3 class=" text-primary" style="text-align:center">
-                Golf Round List
-            </h3>
+<div class="container" style="width: 100%;">
+    <div class="row pt-2 pb-1 align-items-center" style="margin-top: -50px;">
+        <div class="col-md-6">
+            <h3 class="text-primary text-center">Golf Round List</h3>
             <br>
         </div>
-        <div class="col=6" >
-            <a asp asp-controller="GolfRound" asp-action="Upsert" class="btn btn-primary">
+        <div class="col-md-6 text-md-end text-center">
+            <a asp-controller="GolfRound" asp-action="Upsert" class="btn btn-primary">
                 Add a Golf Round
                 <i class="bi bi-plus-circle"></i>
             </a>
         </div>
     </div>
 
-    <div >
-        <table id ="gRTable"class="table table-bordered table-striped ">
-            <thead >
-
+    <div class="table-responsive">
+        <table id="gRTable" class="table table-bordered table-striped">
+            <thead style="background-color: orange;">
                 <tr>
-                    <th>
-                        Scores
-                    </th>
-                    <th>
-                        Players
-                    </th>
-                    <th>
-                        Groups
-                    </th>
-                    <th>
-                       Golf Course
-
-                    <th>
-                        Golf Round Date
-                    </th>
-                    <th>
-                        Round Type
-                    </th>
-                    <th>
-                        Delete
-                    </th>
-
+                    <th>Scores</th>
+                    <th>Players</th>
+                    <th>Groups</th>
+                    <th>Golf Course</th>
+                    <th>Golf Round Date</th>
+                    <th>Round Type</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
-
                 @foreach (var obj in Model)
                 {
                     <tr>
-                        <th>
-                            <div class="w-50 bntn-group" role="group">
-                                <a asp-controller="GolfScore" asp-action="GRScore" asp-route-GRId="@obj.GRId" asp-route-GGId=0 class="btn btn-primary">
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-controller="GolfScore" asp-action="GRScore" asp-route-GRId="@obj.GRId" asp-route-GGId="0" class="btn btn-primary">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                             </div>
-                        </th>
-                        <th>
-                            <div class="w-50 bntn-group" role="group">
-                                <a asp-controller="GolfPlayer" asp-action="IndexR" asp-route-GRId="@obj.GRId" asp-route-GGId=0 class="btn btn-primary">
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-controller="GolfPlayer" asp-action="IndexR" asp-route-GRId="@obj.GRId" asp-route-GGId="0" class="btn btn-primary">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                             </div>
-                        </th>
-                        <th>
-                            <div class="w-50 bntn-group" role="group">
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
                                 <a asp-controller="GolfGroup" asp-action="Index" asp-route-GRId="@obj.GRId" class="btn btn-primary">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                             </div>
-                        </th>
-                        <th>
-                            <a href="GolfCourse/Browse?GCID=@obj.GCId">  @obj.GolfCourse.GCName  </a>
-                           
-                        </th>
-                        <th>
-                                @obj.GRDate.ToString("MM/dd/yyyy")
-                        </th>
-                        <th>
-                                @obj.GRType
-                        </th>
-                        <th>
-                            <div class="w-50 bntn-group" role="group">
+                        </td>
+                        <td>
+                            <a href="GolfCourse/Browse?GCID=@obj.GCId">@obj.GolfCourse.GCName</a>
+                        </td>
+                        <td>@obj.GRDate.ToString("MM/dd/yyyy")</td>
+                        <td>@obj.GRType</td>
+                        <td>
+                            <div class="btn-group" role="group">
                                 <a asp-controller="GolfRound" asp-action="Delete" asp-route-GRId="@obj.GRId" class="btn btn-danger">
                                     <i class="bi bi-trash-fill"></i>
                                 </a>
                             </div>
-                        </th>
+                        </td>
                     </tr>
-
                 }
-
-
             </tbody>
-
         </table>
-
     </div>
-
 </div>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('#gRTable').DataTable();
@@ -109,18 +80,7 @@
 </script>
 
 @section Scripts {
-
     @{
         <partial name="_ValidationScriptsPartial" />
     }
-
 }
-
-
-
-
-
-
-
-
-

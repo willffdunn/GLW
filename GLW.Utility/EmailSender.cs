@@ -20,7 +20,7 @@ namespace Utility
 
             var client = new SendGridClient(SendGridSecret);
 
-            var from = new EmailAddress("willffdunn@tropicbaygolf.com", "Tropic Bay Golf Club");
+            var from = new EmailAddress("admin@golfleaguewizard.com", "Golf League Wizard");
             var to = new EmailAddress(email);
             var message = MailHelper.CreateSingleEmail(from, to, subject, "", htmlMessage);
 

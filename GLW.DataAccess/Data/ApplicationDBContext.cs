@@ -1,22 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Options;
-using System;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Metrics;
-using System.Globalization;
 using Models;
 using Microsoft.AspNetCore.Identity;
-using Models;
-using System.IO;
-using System.Reflection.Metadata;
-using Models.ViewModels;
-using OfficeOpenXml.Export.HtmlExport;
 
 namespace GLW.DataAccess.Data
 {
@@ -46,7 +31,7 @@ namespace GLW.DataAccess.Data
             new Member
             { MemberId = 1,LId=1, Email = "willffdunn@gmail.com", FirstName = "William",
                 LastName = "Dunn", MemberStatus = "Active", 
-                EmailConfirmed = false, MemberType = "TBRes", Handicap = 9,
+                MemberPlan = "Admin", MemberType = "Golfer", Handicap = 9,
                 PhoneNumber = "484-885-7000",
                 MemberTee = "White",
                 PreferredNotification = "Both",
@@ -55,8 +40,9 @@ namespace GLW.DataAccess.Data
             { MemberId = 2,
                 LId = 1,
                 Email = "karenfdunn@gmail.com", FirstName = "Karen",
-                LastName = "Dunn", MemberStatus = "Active", 
-                EmailConfirmed = false, MemberType = "TBRes", Handicap = 19,
+                LastName = "Dunn", MemberStatus = "Active",
+                MemberPlan = "Admin",
+                MemberType = "Social", Handicap = 19,
                 PhoneNumber = "610-733-38380",
                 MemberTee = "Red",
                 PreferredNotification = "Both",

@@ -17,14 +17,12 @@ public class Member
             ErrorMessage = "Invalid email address.")]
         public string Email { get; set; }
         [DefaultValue(false)]
-        public bool EmailConfirmed { get; set; }
-        [DefaultValue(false)]
         public bool Registered { get; set; }
         public string PreferredNotification { get; set; }
-
         [DisplayName("Status")]
         public string MemberStatus { get; set; }
-
+        [DisplayName("Member Plan")]
+        public string MemberPlan { get; set; }
         [DisplayName("Member Type")]
         public string MemberType { get; set; }
         [RegularExpression(@"^\(?\d{3}\)?[-.]?\d{3}[-.]?\d{4}$",
